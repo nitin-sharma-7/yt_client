@@ -7,7 +7,7 @@ import { SiYoutubeshorts } from "react-icons/si";
 function NormalSidebar() {
   return (
     <>
-      <div className="flex flex-col fixed left-0 w-20 h-screen shadow-md bg-white  z-40 top-16 transition-shadow duration-300 ease-in-out">
+      <div className="sm:flex flex-col fixed left-0 w-20 h-screen shadow-md bg-white  z-40 top-16 transition-shadow duration-300 ease-in-out  hidden ">
         <div className="flex flex-col items-center py-4 hover:bg-gray-100 cursor-pointer transition-colors duration-200">
           <FiHome className="text-xl mb-1" />
           <span className="text-xs">Home</span>

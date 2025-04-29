@@ -3,19 +3,26 @@ import Sidebar from "../sidebar/Sidebar";
 import NormalSidebar from "../sidebar/NormalSidebar";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CiSearch } from "react-icons/ci";
-import { FaYoutube } from "react-icons/fa";
-
-function Header() {
+import { useLocation } from "react-router";
+function Header({ sidebarState, setSidebarState }) {
   const [input, setInput] = useState("");
-  const [sidebarState, setSidebarState] = useState(false);
+
+  const { pathname } = useLocation();
+  // console.log(pathname);
 
   return (
     <>
-      <div className="flex fixed z-50 items-center justify-between w-full top-0 bg-white shadow-md py-3 px-4 md:px-6 lg:px-8">
+      <div
+        className="flex fixed z-50 items-center justify-between w-full top-0 bg-white shadow-md py-3 px-4 md:px-6 lg:px-8"
+        onClick={() => setSidebarState(false)}
+      >
         <div className="flex items-center gap-4">
           <GiHamburgerMenu
             className="text-xl cursor-pointer hover:text-red-600 transition-colors duration-300"
-            onClick={() => setSidebarState(!sidebarState)}
+            onClick={(e) => {
+              setSidebarState(!sidebarState);
+              e.stopPropagation();
+            }}
           />
 
           <h1 className="text-xl font-extrabold text-red-600">YouTube</h1>
@@ -28,10 +35,20 @@ function Header() {
               name="search-input"
               value={input}
               placeholder="Search YOUTUBE..."
-              className="w-full px-4 h-8 border-2 border-gray-300 focus:border-red-600 rounded-l-full outline-none transition-colors duration-300"
+              className="w-full px-4 h-8 border-r-0 border-2 border-gray-300 focus:border-red-600 rounded-l-full outline-none transition-colors duration-300"
               onChange={(e) => setInput(e.target.value)}
             />
-            <div className="bg-gray-100 h-8 hover:bg-gray-200 px-3  border-2 border-l-0 border-gray-300 rounded-r-full transition-colors duration-300 flex items-center ">
+            {input.length ? (
+              <span
+                className="border-y-2 px-2 h-8 border-gray-300 text-red-600 hover:font-bold transition-all duration-300 bg-gray-100 cursor-pointer"
+                onClick={() => setInput("")}
+              >
+                X
+              </span>
+            ) : (
+              ""
+            )}
+            <div className="bg-gray-100 h-8 hover:bg-gray-200 px-3  border-2 border-l-0 border-gray-300 rounded-r-full transition-colors duration-300 flex items-center cursor-pointer">
               <CiSearch />
             </div>
           </div>
@@ -45,7 +62,7 @@ function Header() {
       </div>
 
       <div className="transition-all duration-300 ease-in-out">
-        {sidebarState ? <Sidebar /> : <NormalSidebar />}
+        {sidebarState ? <Sidebar /> : pathname == "/" ? <NormalSidebar /> : ""}
       </div>
     </>
   );

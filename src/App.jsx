@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet } from "react-router";
 import Header from "./components/header/Header";
 
 function App() {
+  const [sidebarState, setSidebarState] = useState(false);
   return (
-    <>
-      <Header />
-      <Outlet />
-    </>
+    <div>
+      <Header setSidebarState={setSidebarState} sidebarState={sidebarState} />
+      <div onClick={() => setSidebarState(false)}>
+        <Outlet />
+      </div>
+    </div>
   );
 }
 
