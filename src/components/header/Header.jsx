@@ -1,19 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Sidebar from "../sidebar/Sidebar";
 import NormalSidebar from "../sidebar/NormalSidebar";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CiSearch } from "react-icons/ci";
-import { useLocation } from "react-router";
+import { NavLink, useLocation } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { addSearch } from "../../slices/searchSlice";
+
 function Header({ sidebarState, setSidebarState }) {
   const [input, setInput] = useState("");
-
+  const dispatch = useDispatch();
   const { pathname } = useLocation();
-  // console.log(pathname);
+  const searchIcon = useRef();
+  const handleSearch = () => {
+    dispatch(addSearch(input));
+  };
+  const handleInputClick = (e) => {
+    if (e.keyCode == 13) {
+      searchIcon.current.click();
+    }
+  };
 
   return (
     <>
       <div
-        className="flex fixed z-50 items-center justify-between w-full top-0 bg-white shadow-md py-3 px-4 md:px-6 lg:px-8"
+        className="flex fixed z-50 items-center justify-between w-full top-0 bg-white  py-3 px-4 md:px-6 lg:px-8 shadow-sm"
         onClick={() => setSidebarState(false)}
       >
         <div className="flex items-center gap-4">
@@ -25,7 +36,15 @@ function Header({ sidebarState, setSidebarState }) {
             }}
           />
 
-          <h1 className="text-xl font-extrabold text-red-600">YouTube</h1>
+          <NavLink
+            to="/"
+            onClick={() => {
+              dispatch(addSearch(""));
+              setInput("");
+            }}
+          >
+            <h1 className="text-xl font-extrabold text-red-600">YouTube</h1>
+          </NavLink>
         </div>
 
         <div className="flex items-center w-1/2 max-w-xl">
@@ -35,12 +54,13 @@ function Header({ sidebarState, setSidebarState }) {
               name="search-input"
               value={input}
               placeholder="Search YOUTUBE..."
-              className="w-full px-4 h-8 border-r-0 border-2 border-gray-300 focus:border-red-600 rounded-l-full outline-none transition-colors duration-300"
+              className="w-full px-4 h-8 border-r-0 border-2 border-gray-300 rounded-l-full outline-none transition-colors duration-300 focus:border-red-600 focus:border-r-2"
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => handleInputClick(e)}
             />
             {input.length ? (
               <span
-                className="border-y-2 px-2 h-8 border-gray-300 text-red-600 hover:font-bold transition-all duration-300 bg-gray-100 cursor-pointer"
+                className={`border-y-2 px-2 h-8 border-gray-300 text-red-600 hover:font-bold transition-all duration-300 bg-gray-100 cursor-pointer `}
                 onClick={() => setInput("")}
               >
                 X
@@ -48,14 +68,19 @@ function Header({ sidebarState, setSidebarState }) {
             ) : (
               ""
             )}
-            <div className="bg-gray-100 h-8 hover:bg-gray-200 px-3  border-2 border-l-0 border-gray-300 rounded-r-full transition-colors duration-300 flex items-center cursor-pointer">
+            <NavLink
+              ref={searchIcon}
+              to="/"
+              onClick={handleSearch}
+              className={`bg-gray-100 h-8 hover:bg-gray-200 px-3  border-2 border-l-0 border-gray-300 rounded-r-full transition-colors duration-300 flex items-center cursor-pointer `}
+            >
               <CiSearch />
-            </div>
+            </NavLink>
           </div>
         </div>
 
         <div>
-          <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors duration-300">
+          <button className="bg-red-600  text-white px-3 py-1 rounded-md hover:bg-red-700 transition-colors duration-300">
             Login
           </button>
         </div>

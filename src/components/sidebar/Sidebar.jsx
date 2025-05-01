@@ -9,14 +9,25 @@ import {
   MdOutlineWatchLater,
 } from "react-icons/md";
 import { SiYoutubeshorts } from "react-icons/si";
+import { useDispatch } from "react-redux";
+import { NavLink } from "react-router";
+import { addSearch } from "../../slices/searchSlice";
 
 function Sidebar() {
+  const dispatch = useDispatch();
   return (
     <>
       <div className="flex fixed flex-col  h-screen w-56 bg-white shadow-md z-40 top-16 left-0 transition-all duration-300 ease-in-out">
-        <div className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 cursor-pointer transition-colors duration-200">
+        <div
+          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+          onClick={() => {
+            dispatch(addSearch(""));
+          }}
+        >
           <BiHome className="text-xl" />{" "}
-          <span className="text-sm font-medium">Home</span>
+          <NavLink to="/">
+            <span className="text-sm font-medium">Home</span>
+          </NavLink>
         </div>
         <div className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 cursor-pointer transition-colors duration-200">
           <SiYoutubeshorts className="text-xl" />

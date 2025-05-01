@@ -4,7 +4,8 @@ import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Home from "./components/Home.jsx";
 import MainVideoPage from "./components/videodetailpage/MainVideoPage.jsx";
-
+import appStore from "./store/appStore.js";
+import { Provider } from "react-redux";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,5 +24,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")).render(
-  <RouterProvider router={router} />
+  <Provider store={appStore}>
+    <RouterProvider router={router} />
+  </Provider>
 );
