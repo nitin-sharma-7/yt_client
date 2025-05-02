@@ -12,6 +12,8 @@ function Header({ sidebarState, setSidebarState }) {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const searchIcon = useRef();
+
+  const loginstate = useSelector((store) => store.login.loginCondition);
   const handleSearch = () => {
     dispatch(addSearch(input));
   };
@@ -24,10 +26,10 @@ function Header({ sidebarState, setSidebarState }) {
   return (
     <>
       <div
-        className="flex fixed z-50 items-center justify-between w-full top-0 bg-white  py-3 px-4 md:px-6 lg:px-8 shadow-sm"
+        className="flex fixed z-50 items-center justify-between w-full top-0 bg-white  py-3 px-2 sm:px-4 md:px-6 lg:px-8 shadow-sm"
         onClick={() => setSidebarState(false)}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <GiHamburgerMenu
             className="text-xl cursor-pointer hover:text-red-600 transition-colors duration-300"
             onClick={(e) => {
@@ -43,11 +45,11 @@ function Header({ sidebarState, setSidebarState }) {
               setInput("");
             }}
           >
-            <h1 className="text-xl font-extrabold text-red-600">YouTube</h1>
+            <h1 className="text-xl font-extrabold text-red-600">YouDube</h1>
           </NavLink>
         </div>
 
-        <div className="flex items-center w-1/2 max-w-xl">
+        <div className="flex items-center w-1/3 sm:w-1/2 ">
           <div className="relative flex items-center w-full ">
             <input
               type="text"
@@ -79,10 +81,13 @@ function Header({ sidebarState, setSidebarState }) {
           </div>
         </div>
 
-        <div>
-          <button className="bg-red-600  text-white px-3 py-1 rounded-md hover:bg-red-700 transition-colors duration-300">
-            Login
-          </button>
+        <div className="w-20">
+          <NavLink
+            to="/sign"
+            className="bg-red-600 text-white px-1 sm:px-3 py-1 rounded-md hover:bg-red-700 transition-colors duration-300"
+          >
+            {loginstate ? "Sign up" : " Sign in"}
+          </NavLink>
         </div>
       </div>
 

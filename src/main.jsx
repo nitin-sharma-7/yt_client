@@ -6,6 +6,8 @@ import Home from "./components/Home.jsx";
 import MainVideoPage from "./components/videodetailpage/MainVideoPage.jsx";
 import appStore from "./store/appStore.js";
 import { Provider } from "react-redux";
+import SignPage from "./components/sign-signup/SignPage.jsx";
+import ChannelPage from "./components/chanel/ChanelPage.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -18,6 +20,14 @@ const router = createBrowserRouter([
       {
         path: "/video/:videoID",
         element: <MainVideoPage />,
+      },
+      {
+        path: "/sign",
+        element: <SignPage />,
+      },
+      {
+        path: "/channel/:id",
+        element: <ChannelPage />,
       },
     ],
   },
