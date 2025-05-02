@@ -8,6 +8,7 @@ import appStore from "./store/appStore.js";
 import { Provider } from "react-redux";
 import SignPage from "./components/sign-signup/SignPage.jsx";
 import ChannelPage from "./components/chanel/ChanelPage.jsx";
+import CreateChannel from "./components/chanel/CreateChanel.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: "/channel/:id",
         element: <ChannelPage />,
+      },
+      {
+        path: "/channel/create",
+        element: <CreateChannel />,
       },
     ],
   },
