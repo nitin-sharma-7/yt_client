@@ -3,6 +3,7 @@ import { updateLogin } from "../../slices/loginSlice";
 import { useDispatch } from "react-redux";
 
 function SignPage() {
+  const [userLogged, setUserLogged] = useState(false);
   const [isLog, setIsLog] = useState(true);
   const [user, setUser] = useState(() =>
     isLog
@@ -12,19 +13,45 @@ function SignPage() {
           avatar: "",
           password: "",
         }
-      : { namepass: "", password: "" }
+      : { username: "", password: "" }
   );
+
   const dispatch = useDispatch();
   const handleClick = (e) => {
     e.preventDefault();
     dispatch(updateLogin(isLog));
-    // if verificatin sucess then only update it and change the text to login button
+    post(user);
+    console.log("clicked");
   };
 
   const handlechange = (e) => {
     setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  async function post(data) {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/${isLog ? "signup" : "signin"}`,
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      // handle the response here
+      const x = await res.json();
+      console.log(x);
+      if (x.token) {
+        setUserLogged(true);
+        console.log(token);
+      }
+    } catch (error) {
+      // handle error here
+      console.log("error", error.message);
+    }
+  }
+  console.log(userLogged, user);
   return (
     <div className="flex justify-center items-center min-h-screen  mt-20">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
@@ -126,7 +153,7 @@ function SignPage() {
             <div className="space-y-6">
               <div>
                 <label
-                  htmlFor="namepass"
+                  htmlFor="username"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Username or Email
@@ -134,9 +161,9 @@ function SignPage() {
                 <div className="mt-1">
                   <input
                     type="text"
-                    name="namepass"
-                    id="namepass"
-                    value={user.namepass}
+                    name="username"
+                    id="username"
+                    value={user.username}
                     onChange={(e) => handlechange(e)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                   />

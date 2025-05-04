@@ -20,9 +20,28 @@ function CreateChannel() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Channel data submitted:", channeldata);
-    alert("Channel creation request submitted!");
+    post(channeldata);
   };
+  async function post(data) {
+    try {
+      const res = await fetch("http://localhost:3000/channel", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          authorization:
+            "x eyJhbGciOiJIUzI1NiJ9.Im5pdGluU2hhcm1hIg.7HQP4K5dDS9T9y9cxZB6xs7cFkfrVJxcgEIKpTbHRpA",
+        },
+      });
 
+      // handle the response here
+      const x = await res.json();
+      console.log(x);
+    } catch (error) {
+      // handle error here
+      console.log("error", error.message);
+    }
+  }
   return (
     <div className="max-w-xl mx-auto my-20 p-6  bg-white rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
