@@ -1,30 +1,54 @@
 import React, { useEffect, useState } from "react";
 import MainVideo from "./MainVideo";
 import SideVideo from "./SideVideo";
-import { NavLink, useParams, useSearchParams } from "react-router";
-import { youtubeVideosData } from "../../data/data";
+import { NavLink, useParams } from "react-router";
 
 function MainVideoPage() {
   const { videoID } = useParams();
-  const [data, setData] = useState([]);
+  const [mainVideo, setMainVideo] = useState({});
+  const [recommendedVideos, setRecommendedVideos] = useState([]);
   useEffect(() => {
-    const [filterdData] = youtubeVideosData.filter((val) => val.id == videoID);
-    setData(filterdData);
+    const fetchVideos = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/videos");
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const videos = await response.json();
+
+        // Find the main video by ID
+        const currentVideo = videos.find((video) => video.id == videoID);
+        if (currentVideo) {
+          setMainVideo(currentVideo);
+        } else {
+          throw new Error("Video not found");
+        }
+
+        // Set all videos for the sidebar
+        setRecommendedVideos(videos);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchVideos();
   }, [videoID]);
+
   return (
-    <div className="mt-20  md:flex px-4 gap-3">
-      {/* data is object so data&& dosomething wont work  */}
-      <div className=" md:w-[60%]">
-        {Object.keys(data).length && <MainVideo data={data} />}
+    <div className="mt-20 md:flex px-4 gap-3">
+      <div className="md:w-[60%]">
+        {Object.keys(mainVideo).length > 0 && <MainVideo data={mainVideo} />}
       </div>
-      <div className="md:w-[40%] flex flex-col gap-3 ">
-        {youtubeVideosData.map((val, i) => {
-          return (
-            <NavLink key={val.id} to={`/video/${val.id}`}>
-              <SideVideo data={val} />
+      <div className="md:w-[40%] flex flex-col gap-3">
+        {recommendedVideos
+          .filter((video) => video.id !== videoID) // Filter out the current video
+          .map((video) => (
+            <NavLink key={video.id} to={`/video/${video.id}`}>
+              <SideVideo data={video} />
             </NavLink>
-          );
-        })}
+          ))}
       </div>
     </div>
   );

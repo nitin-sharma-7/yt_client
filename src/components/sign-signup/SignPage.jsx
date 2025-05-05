@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { updateLogin } from "../../slices/loginSlice";
-import { useDispatch } from "react-redux";
+// import { updateLogin } from "../../slices/loginSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../../slices/userSlice";
 
 function SignPage() {
-  const [userLogged, setUserLogged] = useState(false);
   const [isLog, setIsLog] = useState(true);
   const [user, setUser] = useState(() =>
     isLog
@@ -19,7 +19,6 @@ function SignPage() {
   const dispatch = useDispatch();
   const handleClick = (e) => {
     e.preventDefault();
-    dispatch(updateLogin(isLog));
     post(user);
     console.log("clicked");
   };
@@ -42,16 +41,20 @@ function SignPage() {
       // handle the response here
       const x = await res.json();
       console.log(x);
-      if (x.token) {
-        setUserLogged(true);
-        console.log(token);
+      if (x?.token) {
+        dispatch(addUser(x));
+        sessionStorage.setItem("token", x.token);
+      }
+      if (x?.state) {
+        setIsLog(false);
+        const { username, password } = x?.newUser;
+        setUser({ username, password });
       }
     } catch (error) {
       // handle error here
       console.log("error", error.message);
     }
   }
-  console.log(userLogged, user);
   return (
     <div className="flex justify-center items-center min-h-screen  mt-20">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]">

@@ -28,7 +28,7 @@ function CreateChannel() {
         method: "POST",
         body: JSON.stringify(data),
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json", // important to pass
           authorization:
             "x eyJhbGciOiJIUzI1NiJ9.Im5pdGluU2hhcm1hIg.7HQP4K5dDS9T9y9cxZB6xs7cFkfrVJxcgEIKpTbHRpA",
         },

@@ -1,9 +1,8 @@
-import { youtubeVideosData } from "../data/data";
+// import { youtubeVideosData } from "../data/data";
 
-function findTags() {
-  const data = youtubeVideosData;
+function findTags(x) {
   const alltags = [];
-  const tags = data.forEach((val) =>
+  const tags = x.forEach((val) =>
     val.snippet.tags.forEach((tag) => alltags.push(tag))
   );
   // console.log(alltags);

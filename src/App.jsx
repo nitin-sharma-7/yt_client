@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router";
 import Header from "./components/header/Header";
-
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
   return (

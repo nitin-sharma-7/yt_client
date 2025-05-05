@@ -13,7 +13,8 @@ function Header({ sidebarState, setSidebarState }) {
   const { pathname } = useLocation();
   const searchIcon = useRef();
 
-  const loginstate = useSelector((store) => store.login.loginCondition);
+  const loginState = useSelector((store) => store.user.user);
+
   const handleSearch = () => {
     dispatch(addSearch(input));
   };
@@ -22,7 +23,6 @@ function Header({ sidebarState, setSidebarState }) {
       searchIcon.current.click();
     }
   };
-
   return (
     <>
       <div
@@ -86,7 +86,7 @@ function Header({ sidebarState, setSidebarState }) {
             to="/sign"
             className="bg-red-600 text-white px-1 sm:px-3 py-1 rounded-md hover:bg-red-700 transition-colors duration-300"
           >
-            {loginstate ? "Sign up" : " Sign in"}
+            {true ? "Sign up" : " Sign in"}
           </NavLink>
         </div>
       </div>
