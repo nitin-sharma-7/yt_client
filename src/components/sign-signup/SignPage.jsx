@@ -2,6 +2,7 @@ import React, { useState } from "react";
 // import { updateLogin } from "../../slices/loginSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../../slices/userSlice";
+import { useNavigate } from "react-router";
 
 function SignPage() {
   const [isLog, setIsLog] = useState(true);
@@ -15,7 +16,7 @@ function SignPage() {
         }
       : { username: "", password: "" }
   );
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleClick = (e) => {
     e.preventDefault();
@@ -40,13 +41,14 @@ function SignPage() {
 
       // handle the response here
       const x = await res.json();
-      console.log(x);
       if (x?.token) {
         dispatch(addUser(x));
         sessionStorage.setItem("token", x.token);
+        navigate("/");
       }
       if (x?.state) {
         setIsLog(false);
+        dispatch(addUser(x));
         const { username, password } = x?.newUser;
         setUser({ username, password });
       }
@@ -55,6 +57,8 @@ function SignPage() {
       console.log("error", error.message);
     }
   }
+
+  // once login remove this sign form show a logo at header
   return (
     <div className="flex justify-center items-center min-h-screen  mt-20">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
@@ -159,7 +163,7 @@ function SignPage() {
                   htmlFor="username"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Username or Email
+                  Username
                 </label>
                 <div className="mt-1">
                   <input

@@ -9,11 +9,13 @@ import { addSearch } from "../../slices/searchSlice";
 
 function Header({ sidebarState, setSidebarState }) {
   const [input, setInput] = useState("");
+  const [popup, setPopup] = useState(false);
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const searchIcon = useRef();
-
-  const loginState = useSelector((store) => store.user.user);
+  const buttonState = useSelector((store) => store.user.item.state);
+  const loginstate = useSelector((store) => store.user.item.loginState);
+  const user = useSelector((store) => store.user.item);
 
   const handleSearch = () => {
     dispatch(addSearch(input));
@@ -23,6 +25,10 @@ function Header({ sidebarState, setSidebarState }) {
       searchIcon.current.click();
     }
   };
+  function handleSignOut() {
+    setPopup(!popup);
+  }
+  const channel = useSelector((store) => store.channel.item);
   return (
     <>
       <div
@@ -81,14 +87,59 @@ function Header({ sidebarState, setSidebarState }) {
           </div>
         </div>
 
-        <div className="w-20">
-          <NavLink
-            to="/sign"
-            className="bg-red-600 text-white px-1 sm:px-3 py-1 rounded-md hover:bg-red-700 transition-colors duration-300"
-          >
-            {true ? "Sign up" : " Sign in"}
-          </NavLink>
-        </div>
+        {loginstate ? (
+          <div className="relative">
+            <div
+              onClick={() => setPopup(!popup)}
+              className="cursor-pointer hover:scale-105 transition-all duration-300"
+              title="click"
+            >
+              <img
+                className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-fill border-2 border-red-500 hover:border-red-600 "
+                src={user.newuser.avatar}
+                alt={`${user.newuser.username} image`}
+              />
+            </div>
+
+            {popup && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-10 transform transition-all duration-200 ease-in-out">
+                <NavLink
+                  to="/channel/create"
+                  onClick={() => setPopup(!popup)}
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  {channel.channelState ? (
+                    <div className="flex items-center gap-2">
+                      <img
+                        className="w-6 h-6 rounded-full border-red-500 border-2 "
+                        src={channel.newchannel.avatar}
+                        alt="channel image"
+                      />
+                      {channel.newchannel.channelName}
+                    </div>
+                  ) : (
+                    "Create Channel"
+                  )}
+                </NavLink>
+                <p
+                  onClick={handleSignOut}
+                  className="block px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                >
+                  Sign Out
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="w-20">
+            <NavLink
+              to="/sign"
+              className="bg-red-600 text-white px-1 sm:px-3 py-1 rounded-md hover:bg-red-700 transition-colors duration-300"
+            >
+              {buttonState ? "Sign in" : " Sign up"}
+            </NavLink>
+          </div>
+        )}
       </div>
 
       <div className="transition-all duration-300 ease-in-out">

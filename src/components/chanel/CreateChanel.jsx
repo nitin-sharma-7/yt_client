@@ -1,6 +1,11 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import { addChannelState } from "../../slices/channelSlice";
 
 function CreateChannel() {
+  const user = useSelector((store) => store.user.item);
+  // console.log(user);
   const [channeldata, setChanneldata] = useState({
     channelName: "",
     handle: "",
@@ -8,7 +13,8 @@ function CreateChannel() {
     channelBanner: "",
     avatar: "",
   });
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setChanneldata((prev) => ({
@@ -20,23 +26,26 @@ function CreateChannel() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Channel data submitted:", channeldata);
-    post(channeldata);
+    post(channeldata, user.newuser._id);
   };
-  async function post(data) {
+  async function post(data, id) {
     try {
       const res = await fetch("http://localhost:3000/channel", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, userid: id }),
         headers: {
           "Content-Type": "application/json", // important to pass
-          authorization:
-            "x eyJhbGciOiJIUzI1NiJ9.Im5pdGluU2hhcm1hIg.7HQP4K5dDS9T9y9cxZB6xs7cFkfrVJxcgEIKpTbHRpA",
+          authorization: `x ${user.token}`,
         },
       });
 
       // handle the response here
       const x = await res.json();
       console.log(x);
+      if (x?.channelState) {
+        dispatch(addChannelState(x));
+        navigate(`/channel/${x.newchannel._id}`);
+      }
     } catch (error) {
       // handle error here
       console.log("error", error.message);

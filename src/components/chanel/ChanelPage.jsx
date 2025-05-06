@@ -1,25 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router";
 
 function ChannelPage() {
-  const data = {
-    channelId: "channel101",
-    channelName: "Code With Nitin",
-    handle: "codeWithNitin",
-    owner: "userID",
-    description:
-      "Frontend, backend, and full-stack tutorials for aspiring devs. Learn modern web development through practical projects and real-world examples.",
-    channelBanner:
-      "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwLp-COysT7ukjE2mk6WglJk2dHvB5SI3JAjfUyUYFl7KNo6VuHu_hCeE6b9v0vgm-u6ZMm2PWqEv1S_g",
-    avatar:
-      "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwLp-COysT7ukjE2mk6WglJk2dHvB5SI3JAjfUyUYFl7KNo6VuHu_hCeE6b9v0vgm-u6ZMm2PWqEv1S_g",
-    subscribers: 18400,
-    videos: ["video1", "video2", "video3", "video4"],
-    joinedDate: "Jan 2018",
-  };
+  const [data, setdata] = useState({});
+  const { id } = useParams();
+  useEffect(() => {
+    async function getdata() {
+      const res = await fetch(`http://localhost:3000/channel/${id}`);
+      const data = await res.json();
+      setdata(data);
+    }
+    getdata();
+  }, [id]);
 
   return (
     <div className="bg-gray-50 min-h-screen mt-20">
-      {/* Channel Banner */}
       <div className="relative w-full">
         <img
           src={data.channelBanner}
@@ -49,8 +45,8 @@ function ChannelPage() {
                 </h1>
                 <div className="text-gray-600 text-sm flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-1">
                   <span>@{data.handle}</span>
-                  <span>{data.subscribers.toLocaleString()} subscribers</span>
-                  <span>{data.videos.length} videos</span>
+                  <span>{data.subscribers?.toLocaleString()} subscribers</span>
+                  <span>{data.videos?.length} videos</span>
                 </div>
                 <p className="mt-2 text-sm text-gray-700 line-clamp-2 md:line-clamp-none">
                   {data.description}
@@ -110,3 +106,22 @@ function ChannelPage() {
 }
 
 export default ChannelPage;
+
+// const data = {
+//   channelId: "channel101",
+//   channelName: "Code With Nitin",
+//   handle: "codeWithNitin",
+//   owner: "userID",
+//   description:
+//     "Frontend, backend, and full-stack tutorials for aspiring devs. Learn modern web development through practical projects and real-world examples.",
+//   channelBanner:
+//     "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwLp-COysT7ukjE2mk6WglJk2dHvB5SI3JAjfUyUYFl7KNo6VuHu_hCeE6b9v0vgm-u6ZMm2PWqEv1S_g",
+//   avatar:
+//     "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwLp-COysT7ukjE2mk6WglJk2dHvB5SI3JAjfUyUYFl7KNo6VuHu_hCeE6b9v0vgm-u6ZMm2PWqEv1S_g",
+//   subscribers: 18400,
+//   videos: ["video1", "video2", "video3", "video4"],
+//   joinedDate: "Jan 2018",
+// };
+
+// subscribers: 18400,
+//   joinedDate: "Jan 2018",
