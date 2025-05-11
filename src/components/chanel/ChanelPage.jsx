@@ -20,7 +20,7 @@ function ChannelPage() {
         <img
           src={data.channelBanner}
           alt="Channel Banner"
-          className="w-full h-48 md:h-56 lg:h-64 object-cover"
+          className="w-full h-48 md:h-56 lg:h-64 object-fill"
         />
       </div>
 

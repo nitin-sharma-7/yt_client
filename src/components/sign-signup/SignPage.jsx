@@ -41,9 +41,10 @@ function SignPage() {
 
       // handle the response here
       const x = await res.json();
+
       if (x?.token) {
         dispatch(addUser(x));
-        sessionStorage.setItem("token", x.token);
+        sessionStorage.setItem("user", JSON.stringify(x));
         navigate("/");
       }
       if (x?.state) {

@@ -6,6 +6,7 @@ import { CiSearch } from "react-icons/ci";
 import { NavLink, useLocation } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { addSearch } from "../../slices/searchSlice";
+import { addUser } from "../../slices/userSlice";
 
 function Header({ sidebarState, setSidebarState }) {
   const [input, setInput] = useState("");
@@ -27,6 +28,8 @@ function Header({ sidebarState, setSidebarState }) {
   };
   function handleSignOut() {
     setPopup(!popup);
+    sessionStorage.clear();
+    dispatch(addUser({}));
   }
   const channel = useSelector((store) => store.channel.item);
   return (
