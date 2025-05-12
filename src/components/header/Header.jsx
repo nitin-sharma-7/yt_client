@@ -3,19 +3,18 @@ import Sidebar from "../sidebar/Sidebar";
 import NormalSidebar from "../sidebar/NormalSidebar";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { CiSearch } from "react-icons/ci";
-import { NavLink, useLocation } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { addSearch } from "../../slices/searchSlice";
 import { addUser } from "../../slices/userSlice";
+import { addChannel } from "../../slices/channelSlice";
 
-function Header({ sidebarState, setSidebarState }) {
+function Header({ sidebarState, setSidebarState, popup, setPopup }) {
   const [input, setInput] = useState("");
-  const [popup, setPopup] = useState(false);
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const searchIcon = useRef();
-  const buttonState = useSelector((store) => store.user.item.state);
-  const loginstate = useSelector((store) => store.user.item.loginState);
+  const navigate = useNavigate();
   const user = useSelector((store) => store.user.item);
 
   const handleSearch = () => {
@@ -30,6 +29,8 @@ function Header({ sidebarState, setSidebarState }) {
     setPopup(!popup);
     sessionStorage.clear();
     dispatch(addUser({}));
+    dispatch(addChannel({}));
+    navigate("/");
   }
   const channel = useSelector((store) => store.channel.item);
   return (
@@ -90,7 +91,7 @@ function Header({ sidebarState, setSidebarState }) {
           </div>
         </div>
 
-        {loginstate ? (
+        {user?.loginState ? (
           <div className="relative">
             <div
               onClick={() => setPopup(!popup)}
@@ -99,34 +100,44 @@ function Header({ sidebarState, setSidebarState }) {
             >
               <img
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-fill border-2 border-red-500 hover:border-red-600 "
-                src={user.newuser.avatar}
-                alt={`${user.newuser.username} image`}
+                src={user?.newuser?.avatar}
+                alt={`${user?.newuser?.username} image`}
               />
             </div>
 
             {popup && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-10 transform transition-all duration-200 ease-in-out">
-                <NavLink
-                  to="/channel/create"
-                  onClick={() => setPopup(!popup)}
-                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                >
-                  {channel.channelState ? (
+                {channel?.channelState ? (
+                  // If user has a channel, show channel link
+                  <NavLink
+                    to={`/channel/${channel.newChannel._id}`}
+                    onClick={() => setPopup(false)}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
                     <div className="flex items-center gap-2">
                       <img
-                        className="w-6 h-6 rounded-full border-red-500 border-2 "
-                        src={channel.newchannel.avatar}
+                        className="w-6 h-6 rounded-full border-red-500 border-2"
+                        src={channel?.newChannel?.avatar}
                         alt="channel image"
                       />
-                      {channel.newchannel.channelName}
+                      {channel?.newChannel?.channelName}
                     </div>
-                  ) : (
-                    "Create Channel"
-                  )}
-                </NavLink>
+                  </NavLink>
+                ) : (
+                  // If user doesn't have a channel, show create channel link
+                  <NavLink
+                    to="/channel/create"
+                    onClick={() => setPopup(false)}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  >
+                    Create Channel
+                  </NavLink>
+                )}
+
+                {/* Sign Out button */}
                 <p
                   onClick={handleSignOut}
-                  className="block px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                  className="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer"
                 >
                   Sign Out
                 </p>
@@ -139,7 +150,7 @@ function Header({ sidebarState, setSidebarState }) {
               to="/sign"
               className="bg-red-600 text-white px-1 sm:px-3 py-1 rounded-md hover:bg-red-700 transition-colors duration-300"
             >
-              {buttonState ? "Sign in" : " Sign up"}
+              {user?.state ? "Sign in" : " Sign up"}
             </NavLink>
           </div>
         )}

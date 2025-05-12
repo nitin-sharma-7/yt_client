@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
+import axios from "axios";
 
 function ChannelPage() {
   const [data, setdata] = useState({});
   const { id } = useParams();
+  const user = useSelector((store) => store.user.item);
+  const channel = useSelector((store) => store.channel.item);
   useEffect(() => {
     async function getdata() {
       const res = await fetch(`http://localhost:3000/channel/${id}`);
@@ -13,7 +16,23 @@ function ChannelPage() {
     }
     getdata();
   }, [id]);
-
+  const handleSubs = async () => {
+    try {
+      const { data: res } = await axios.post(
+        "http://localhost:3000/channel/subscribe",
+        { userId: user.newuser._id, channelId: channel.newChannel._id },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `channelDataRes ${user.token}`,
+          },
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="bg-gray-50 min-h-screen mt-20">
       <div className="relative w-full">
@@ -58,7 +77,10 @@ function ChannelPage() {
 
               {/* Subscribe Button */}
               <div className="mt-3 md:mt-0">
-                <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition duration-200">
+                <button
+                  onClick={() => handleSubs()}
+                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition duration-200"
+                >
                   Subscribe
                 </button>
               </div>

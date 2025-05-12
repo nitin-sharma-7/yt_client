@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../../slices/userSlice";
 import { useNavigate } from "react-router";
+import { addChannel } from "../../slices/channelSlice";
 
 function SignPage() {
   const [isLog, setIsLog] = useState(true);
@@ -40,17 +41,34 @@ function SignPage() {
       );
 
       // handle the response here
-      const x = await res.json();
-
-      if (x?.token) {
-        dispatch(addUser(x));
-        sessionStorage.setItem("user", JSON.stringify(x));
+      const userdata = await res.json();
+      console.log(userdata.channel);
+      console.log(userdata);
+      if (userdata?.token) {
+        dispatch(addUser(userdata));
+        sessionStorage.setItem("user", JSON.stringify(userdata));
         navigate("/");
       }
-      if (x?.state) {
+      if (userdata?.newuser?.channel) {
+        sessionStorage.setItem(
+          "channel",
+          JSON.stringify({
+            newChannel: userdata.newuser.channel,
+            channelState: true,
+          })
+        );
+        dispatch(
+          addChannel({
+            newChannel: userdata.newUser.channel,
+            channelState: true,
+          })
+        );
+        navigate("/");
+      }
+      if (userdata?.state) {
         setIsLog(false);
-        dispatch(addUser(x));
-        const { username, password } = x?.newUser;
+        dispatch(addUser(userdata));
+        const { username, password } = userdata?.newUser;
         setUser({ username, password });
       }
     } catch (error) {

@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import { addChannelState } from "../../slices/channelSlice";
+import { addChannel } from "../../slices/channelSlice.js";
+import axios from "axios";
 
 function CreateChannel() {
   const user = useSelector((store) => store.user.item);
-  // console.log(user);
+
   const [channeldata, setChanneldata] = useState({
     channelName: "",
     handle: "",
     description: "",
     channelBanner: "",
     avatar: "",
+    owner: user.newuser._id,
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,29 +24,29 @@ function CreateChannel() {
       [name]: value,
     }));
   };
-
+  console.log(channeldata);
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Channel data submitted:", channeldata);
-    post(channeldata, user.newuser._id);
+    post(channeldata);
   };
-  async function post(data, id) {
+  async function post(data) {
     try {
-      const res = await fetch("http://localhost:3000/channel", {
-        method: "POST",
-        body: JSON.stringify({ ...data, userid: id }),
-        headers: {
-          "Content-Type": "application/json", // important to pass
-          authorization: `x ${user.token}`,
-        },
-      });
+      const { data: channelDataRes } = await axios.post(
+        "http://localhost:3000/channel",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `channelDataRes ${user.token}`,
+          },
+        }
+      );
 
       // handle the response here
-      const x = await res.json();
-      console.log(x);
-      if (x?.channelState) {
-        dispatch(addChannelState(x));
-        navigate(`/channel/${x.newchannel._id}`);
+      if (channelDataRes?.channelState) {
+        dispatch(addChannel(channelDataRes));
+        sessionStorage.setItem("channel", JSON.stringify(channelDataRes));
+        navigate(`/channel/${channelDataRes.newChannel._id}`);
       }
     } catch (error) {
       // handle error here
