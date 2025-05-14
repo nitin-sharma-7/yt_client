@@ -30,7 +30,6 @@ function Home() {
     fetchVideos();
   }, []);
 
-  console.log(videos);
   // Filter videos based on search
   useEffect(() => {
     if (!videos.length) return;

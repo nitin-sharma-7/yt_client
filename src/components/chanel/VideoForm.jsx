@@ -25,7 +25,7 @@ function VideoForm() {
     e.preventDefault();
     const formattedVideo = {
       ...video,
-      tags: video.tags.split(",").map((tag) => tag.trim()),
+      tags: video.tags.split("#").map((tag) => tag.trim()),
     };
     console.log("Submitted Video:", {
       formattedVideo,
@@ -37,6 +37,14 @@ function VideoForm() {
       formattedVideo,
       channelId: channel.newChannel._id,
       channelTitle: channel.newChannel.channelName,
+    });
+    setVideo({
+      title: "",
+      description: "",
+      maxres: "",
+      tags: "",
+      duration: "",
+      videoLink: "",
     });
   };
 

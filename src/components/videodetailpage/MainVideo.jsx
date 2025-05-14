@@ -1,8 +1,10 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
 import { BsThreeDots } from "react-icons/bs";
 import { FaArrowDown } from "react-icons/fa";
 import { IoMdShareAlt } from "react-icons/io";
+import { useSelector } from "react-redux";
 
 function MainVideo({ data }) {
   const [showComents, setShowComents] = useState(false);
@@ -15,6 +17,27 @@ function MainVideo({ data }) {
     else if (subs >= 1000) return (subs / 1000).toFixed(2) + " K";
     else return subs;
   };
+  const user = useSelector((store) => store.user.item);
+  console.log(user);
+  async function handlePost() {
+    const commentData = { comment, videoId: data._id, owner: user.newuser._id };
+    try {
+      const { data: res } = await axios.post(
+        "http://localhost:3000/comment/create",
+        commentData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `x ${user.token}`,
+          },
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      // handle error here
+      console.log("error", error.message);
+    }
+  }
 
   return (
     <>
@@ -155,19 +178,29 @@ function MainVideo({ data }) {
         {/* for adding a comment */}
         <div className="flex items-center pb-2 border-b-2 mb-2 gap-4">
           <img
-            src={data.snippet.thumbnails.maxres.url}
-            alt=""
+            src={user.newuser.avatar}
+            alt={user.newuser.username}
             className="w-10 h-10 rounded-full"
           />
           <input
             type="text"
             placeholder="Add a comment..."
-            className="focus:outline-none"
+            className="focus:outline-none w-full "
             onChange={(e) => {
               setComment(e.target.value);
             }}
             value={comment}
           />
+          {comment.length ? (
+            <div
+              className="ml-4 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full px-2 py-1 text-sm"
+              onClick={handlePost}
+            >
+              post
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         {/* Comments Section */}
         {showComents ? (
@@ -181,20 +214,20 @@ function MainVideo({ data }) {
             {data.comments.map((comment, i) => (
               <div key={i} className="flex space-x-3 mb-4">
                 <img
-                  src={comment.authorProfileImageUrl}
+                  src={comment.owner.avatar}
                   alt=""
                   className="w-8 h-8 rounded-full mt-2"
                 />
                 <div>
                   <div className="flex items-center mb-1">
                     <span className="font-medium mr-2">
-                      {comment.authorDisplayName}
+                      {comment.owner.username}
                     </span>
                     <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {new Date(comment.publishedAt).toLocaleDateString()}
+                      {new Date(comment.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-sm mb-1">{comment.text}</p>
+                  <p className="text-sm mb-1">{comment.comment}</p>
                   <div className="flex items-center text-sm space-x-4">
                     <button className="flex items-center">
                       <span className="mr-1">
