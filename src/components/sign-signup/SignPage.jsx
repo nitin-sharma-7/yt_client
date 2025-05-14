@@ -42,7 +42,6 @@ function SignPage() {
 
       // handle the response here
       const userdata = await res.json();
-      console.log(userdata.channel);
       console.log(userdata);
       if (userdata?.token) {
         dispatch(addUser(userdata));

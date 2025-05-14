@@ -19,7 +19,7 @@ function MainVideoPage() {
         const videos = await response.json();
 
         // Find the main video by ID
-        const currentVideo = videos.find((video) => video.id == videoID);
+        const currentVideo = videos.find((video) => video._id == videoID);
         if (currentVideo) {
           setMainVideo(currentVideo);
         } else {
@@ -43,9 +43,9 @@ function MainVideoPage() {
       </div>
       <div className="md:w-[40%] flex flex-col gap-3">
         {recommendedVideos
-          .filter((video) => video.id !== videoID) // Filter out the current video
+          .filter((video) => video._id !== videoID) // Filter out the current video
           .map((video) => (
-            <NavLink key={video.id} to={`/video/${video.id}`}>
+            <NavLink key={video._id} to={`/video/${video._id}`}>
               <SideVideo data={video} />
             </NavLink>
           ))}

@@ -30,6 +30,7 @@ function Home() {
     fetchVideos();
   }, []);
 
+  console.log(videos);
   // Filter videos based on search
   useEffect(() => {
     if (!videos.length) return;
@@ -67,7 +68,7 @@ function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-10">
           {filteredVideos.length ? (
             filteredVideos.map((video) => (
-              <NavLink to={`/video/${video.id}`} key={video.id}>
+              <NavLink to={`/video/${video._id}`} key={video._id}>
                 <HomeVideoCard data={video} />
               </NavLink>
             ))

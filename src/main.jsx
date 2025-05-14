@@ -9,6 +9,7 @@ import { Provider } from "react-redux";
 import SignPage from "./components/sign-signup/SignPage.jsx";
 import ChannelPage from "./components/chanel/ChanelPage.jsx";
 import CreateChannel from "./components/chanel/CreateChanel.jsx";
+import VideoForm from "./components/chanel/VideoForm.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
       {
         path: "/channel/create",
         element: <CreateChannel />,
+      },
+      {
+        path: "/video/upload",
+        element: <VideoForm />,
       },
     ],
   },

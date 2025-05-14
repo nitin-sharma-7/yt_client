@@ -106,7 +106,7 @@ function MainVideo({ data }) {
 
         {/* Video Description */}
         <div className="mt-4 bg-gray-100 dark:bg-gray-800 rounded-xl p-3">
-          <div className="flex space-x-3 text-sm text-gray-600 dark:text-gray-400 mb-2">
+          <div className="flex flex-wrap space-x-3 text-sm text-gray-600 dark:text-gray-400 mb-2">
             <span>{countSimple(data.statistics.viewCount)} views</span>
             <span>
               {new Date(data.snippet.publishedAt).toLocaleDateString()}

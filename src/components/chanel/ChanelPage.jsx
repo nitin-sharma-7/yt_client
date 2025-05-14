@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { NavLink, useParams } from "react-router";
 import axios from "axios";
+import { FaVideo } from "react-icons/fa";
 
 function ChannelPage() {
   const [data, setdata] = useState({});
@@ -45,7 +46,7 @@ function ChannelPage() {
 
       {/* Channel Info Section */}
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row md:items-start py-4 gap-4">
+        <div className="flex flex-col sm:flex-row  py-4 gap-4">
           {/* Avatar */}
           <div className="flex-shrink-0 -mt-8 md:-mt-12 z-10">
             <img
@@ -74,15 +75,24 @@ function ChannelPage() {
                   Joined {data.joinedDate}
                 </p>
               </div>
-
-              {/* Subscribe Button */}
-              <div className="mt-3 md:mt-0">
-                <button
-                  onClick={() => handleSubs()}
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition duration-200"
-                >
-                  Subscribe
-                </button>
+              <div className="flex gap-2">
+                <NavLink to="/video/upload" className="mt-3 md:mt-0">
+                  <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition duration-200">
+                    <div className="flex items-center gap-1 ">
+                      <FaVideo />
+                      <span> Upload</span>
+                    </div>
+                  </button>
+                </NavLink>
+                {/* Subscribe Button */}
+                <div className="mt-3 md:mt-0">
+                  <button
+                    onClick={() => handleSubs()}
+                    className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition duration-200"
+                  >
+                    Subscribe
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -128,22 +138,3 @@ function ChannelPage() {
 }
 
 export default ChannelPage;
-
-// const data = {
-//   channelId: "channel101",
-//   channelName: "Code With Nitin",
-//   handle: "codeWithNitin",
-//   owner: "userID",
-//   description:
-//     "Frontend, backend, and full-stack tutorials for aspiring devs. Learn modern web development through practical projects and real-world examples.",
-//   channelBanner:
-//     "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwLp-COysT7ukjE2mk6WglJk2dHvB5SI3JAjfUyUYFl7KNo6VuHu_hCeE6b9v0vgm-u6ZMm2PWqEv1S_g",
-//   avatar:
-//     "https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcSwLp-COysT7ukjE2mk6WglJk2dHvB5SI3JAjfUyUYFl7KNo6VuHu_hCeE6b9v0vgm-u6ZMm2PWqEv1S_g",
-//   subscribers: 18400,
-//   videos: ["video1", "video2", "video3", "video4"],
-//   joinedDate: "Jan 2018",
-// };
-
-// subscribers: 18400,
-//   joinedDate: "Jan 2018",

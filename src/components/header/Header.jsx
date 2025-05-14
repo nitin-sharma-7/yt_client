@@ -32,7 +32,9 @@ function Header({ sidebarState, setSidebarState, popup, setPopup }) {
     dispatch(addChannel({}));
     navigate("/");
   }
-  const channel = useSelector((store) => store.channel.item);
+  const channel =
+    useSelector((store) => store.channel.item) ||
+    JSON.parse(sessionStorage.getItem("channel"));
   return (
     <>
       <div
