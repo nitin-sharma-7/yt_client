@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { addChannel } from "../../slices/channelSlice.js";
 import axios from "axios";
-
+import toast, { Toaster } from "react-hot-toast";
 function CreateChannel() {
   const user = useSelector((store) => store.user.item);
 
@@ -15,6 +15,7 @@ function CreateChannel() {
     avatar: "",
     owner: user.newuser._id,
   });
+  const notify = (x) => toast(x);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleChange = (e) => {
@@ -24,7 +25,6 @@ function CreateChannel() {
       [name]: value,
     }));
   };
-  console.log(channeldata);
   const handleSubmit = (e) => {
     e.preventDefault();
     post(channeldata);
@@ -44,6 +44,7 @@ function CreateChannel() {
 
       // handle the response here
       if (channelDataRes?.channelState) {
+        notify("channel created sucessfully");
         dispatch(addChannel(channelDataRes));
         sessionStorage.setItem("channel", JSON.stringify(channelDataRes));
         navigate(`/channel/${channelDataRes.newChannel._id}`);

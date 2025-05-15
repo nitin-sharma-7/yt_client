@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 // import { updateLogin } from "../../slices/loginSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addUser } from "../../slices/userSlice";
 import { useNavigate } from "react-router";
 import { addChannel } from "../../slices/channelSlice";
-
+import toast, { Toaster } from "react-hot-toast";
 function SignPage() {
   const [isLog, setIsLog] = useState(true);
   const [user, setUser] = useState(() =>
@@ -17,6 +17,7 @@ function SignPage() {
         }
       : { username: "", password: "" }
   );
+  const notify = (x) => toast(x);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleClick = (e) => {
@@ -42,13 +43,18 @@ function SignPage() {
 
       // handle the response here
       const userdata = await res.json();
-      console.log(userdata);
       if (userdata?.token) {
         dispatch(addUser(userdata));
         sessionStorage.setItem("user", JSON.stringify(userdata));
         navigate("/");
       }
       if (userdata?.newuser?.channel) {
+        dispatch(
+          addChannel({
+            newChannel: userdata?.newuser?.channel,
+            channelState: true,
+          })
+        );
         sessionStorage.setItem(
           "channel",
           JSON.stringify({
@@ -65,6 +71,7 @@ function SignPage() {
         navigate("/");
       }
       if (userdata?.state) {
+        notify("Sign-Up sucessfully");
         setIsLog(false);
         dispatch(addUser(userdata));
         const { username, password } = userdata?.newUser;
@@ -79,6 +86,17 @@ function SignPage() {
   // once login remove this sign form show a logo at header
   return (
     <div className="flex justify-center items-center min-h-screen  mt-20">
+      <Toaster
+        toastOptions={{
+          duration: 2000,
+          removeDelay: 1000,
+          style: {
+            fontWeight: "bold",
+            background: "white",
+            color: "black",
+          },
+        }}
+      />
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-gray-900">

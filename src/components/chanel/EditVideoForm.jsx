@@ -1,18 +1,18 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
-function VideoForm() {
+
+function EditVideoForm() {
   const [video, setVideo] = useState({
     title: "",
     description: "",
     maxres: "",
     tags: "",
     duration: "",
-    videoLink: "",
   });
-  const notify = (x) => toast(x);
+  const { id } = useParams();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setVideo((prev) => ({
@@ -20,72 +20,69 @@ function VideoForm() {
       [name]: value,
     }));
   };
+  const notify = (x) => toast(x);
   const user = useSelector((store) => store.user.item);
-  const channel = useSelector((store) => store.channel.item);
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const formattedVideo = {
-      ...video,
-      tags: video.tags.split("#").map((tag) => tag.trim()),
-    };
-    console.log("Submitted Video:", {
-      formattedVideo,
-      channelId: channel.newChannel._id,
-      channelTitle: channel.newChannel.channelName,
-    });
-    // You can POST this `formattedVideo` object to your backend
-    post({
-      formattedVideo,
-      channelId: channel.newChannel._id,
-      channelTitle: channel.newChannel.channelName,
-    });
-    setVideo({
-      title: "",
-      description: "",
-      maxres: "",
-      tags: "",
-      duration: "",
-      videoLink: "",
-    });
-  };
+
   const navigate = useNavigate();
-  async function post(data) {
+  useEffect(() => {
+    async function getVideo() {
+      try {
+        const { data: res } = await axios.get(
+          `http://localhost:3000/video/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `token ${user.token}`,
+            },
+          }
+        );
+
+        // console.log(res);
+        if (res) {
+          setVideo({
+            title: res.snippet.title || "",
+            description: res.snippet.description || "",
+            maxres: res.snippet.thumbnails.maxres.url || "",
+            tags: res.snippet.tags || "",
+            duration: res.contentDetails.duration || "",
+          });
+        }
+      } catch (error) {}
+    }
+    getVideo();
+  }, [id]);
+  async function handleUpdate(e) {
+    e.preventDefault(); // Prevent page reload
+
     try {
-      const { data: res } = await axios.post(
-        "http://localhost:3000/video",
-        data,
+      const { data: res } = await axios.put(
+        `http://localhost:3000/video/update/${id}`,
+        {
+          title: video.title,
+          description: video.description,
+          maxres: video.maxres,
+          tags: video.tags,
+          duration: video.duration,
+        },
         {
           headers: {
             "Content-Type": "application/json",
-            authorization: `x ${user.token}`,
+            authorization: `channelDataRes ${user.token}`,
           },
         }
       );
-      if (res) {
-        notify("Video uploaded sucessfully");
-        navigate("/");
-      }
-      console.log(res);
+      user.token && notify(res.message);
+      // console.log("Update Success:", res);
+
+      navigate("/");
     } catch (error) {
-      // handle error here
-      console.log("error", error.message);
+      console.log("Update Error:", error);
     }
   }
   return (
     <div className="mt-20 max-w-xl mx-auto p-4 border rounded-md shadow-md">
-      <Toaster
-        toastOptions={{
-          duration: 2000,
-          removeDelay: 1000,
-          style: {
-            fontWeight: "bold",
-            background: "white",
-            color: "black",
-          },
-        }}
-      />
-      <h2 className="text-2xl font-bold mb-4">Add New Video</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <h2 className="text-2xl font-bold mb-4"> Update Video</h2>
+      <form onSubmit={(e) => handleUpdate(e)} className="flex flex-col gap-4">
         <label>
           Title:
           <input
@@ -143,17 +140,6 @@ function VideoForm() {
           />
         </label>
 
-        <label>
-          Video Link:
-          <input
-            type="text"
-            name="videoLink"
-            value={video.videoLink}
-            onChange={handleChange}
-            className="border px-2 py-1 w-full"
-          />
-        </label>
-
         <button
           type="submit"
           className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
@@ -165,4 +151,4 @@ function VideoForm() {
   );
 }
 
-export default VideoForm;
+export default EditVideoForm;

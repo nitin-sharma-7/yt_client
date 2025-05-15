@@ -10,6 +10,7 @@ import SignPage from "./components/sign-signup/SignPage.jsx";
 import ChannelPage from "./components/chanel/ChanelPage.jsx";
 import CreateChannel from "./components/chanel/CreateChanel.jsx";
 import VideoForm from "./components/chanel/VideoForm.jsx";
+import EditVideoForm from "./components/chanel/EditVideoForm.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "/video/upload",
         element: <VideoForm />,
+      },
+      {
+        path: "/video/update/:id",
+        element: <EditVideoForm />,
       },
     ],
   },

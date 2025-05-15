@@ -1,16 +1,20 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 import { AiOutlineDislike, AiOutlineLike } from "react-icons/ai";
-import { BsThreeDots } from "react-icons/bs";
+import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
+import { CiEdit } from "react-icons/ci";
 import { FaArrowDown } from "react-icons/fa";
 import { IoMdShareAlt } from "react-icons/io";
+import { MdDeleteOutline } from "react-icons/md";
 import { useSelector } from "react-redux";
+import toast, { Toaster } from "react-hot-toast";
 
 function MainVideo({ data }) {
   const [showComents, setShowComents] = useState(false);
   const [more, setMore] = useState(false);
   const [comment, setComment] = useState("");
-
+  const [model, setModel] = useState(null);
+  const notify = (x) => toast(x);
   const countSimple = (subs) => {
     if (subs >= 1000000000) return (subs / 1000000000).toFixed(2) + " B";
     else if (subs >= 1000000) return (subs / 1000000).toFixed(2) + " M";
@@ -18,9 +22,12 @@ function MainVideo({ data }) {
     else return subs;
   };
   const user = useSelector((store) => store.user.item);
-  console.log(user);
   async function handlePost() {
-    const commentData = { comment, videoId: data._id, owner: user.newuser._id };
+    const commentData = {
+      comment,
+      videoId: data._id,
+      owner: user?.newuser?._id,
+    };
     try {
       const { data: res } = await axios.post(
         "http://localhost:3000/comment/create",
@@ -32,11 +39,39 @@ function MainVideo({ data }) {
           },
         }
       );
-      console.log(res);
+
+      user.token ? notify(res.message) : notify("Plese signin to comment ");
     } catch (error) {
       // handle error here
       console.log("error", error.message);
     }
+    setComment("");
+  }
+  async function handleDelete(x) {
+    try {
+      const { data: res } = await axios.delete(
+        "http://localhost:3000/comment/delete",
+        {
+          data: { commentId: x, videoId: data._id },
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `x ${user.token}`,
+          },
+        }
+      );
+      user.token
+        ? notify(" comment deleted sucessfully")
+        : notify("Plese signin first");
+    } catch (error) {
+      console.log("error", error.response?.data || error.message);
+    }
+    setModel(null);
+  }
+
+  function handleUpdate(x, y) {
+    handleDelete(x);
+    setComment(y);
+    setModel(null);
   }
 
   return (
@@ -65,7 +100,17 @@ function MainVideo({ data }) {
               .replace("S", "")}
           </div>
         </div>
-
+        <Toaster
+          toastOptions={{
+            duration: 2000,
+            removeDelay: 1000,
+            style: {
+              fontWeight: "bold",
+              background: "white",
+              color: "black",
+            },
+          }}
+        />
         {/* Video Title */}
         <h1 className="text-xl font-bold mt-3 mb-2">{data.snippet.title}</h1>
 
@@ -130,9 +175,11 @@ function MainVideo({ data }) {
         {/* Video Description */}
         <div className="mt-4 bg-gray-100 dark:bg-gray-800 rounded-xl p-3">
           <div className="flex flex-wrap space-x-3 text-sm text-gray-600 dark:text-gray-400 mb-2">
-            <span>{countSimple(data.statistics.viewCount)} views</span>
+            <span>{countSimple(3424324)} views</span>
             <span>
-              {new Date(data.snippet.publishedAt).toLocaleDateString()}
+              {new Date(
+                data.publishedAt || data.createdAt
+              ).toLocaleDateString()}
             </span>
           </div>
 
@@ -178,9 +225,9 @@ function MainVideo({ data }) {
         {/* for adding a comment */}
         <div className="flex items-center pb-2 border-b-2 mb-2 gap-4">
           <img
-            src={user.newuser.avatar}
-            alt={user.newuser.username}
-            className="w-10 h-10 rounded-full"
+            src={user?.newuser?.avatar}
+            alt={user?.newuser?.username}
+            className="w-10 h-10 rounded-full border-2 border-red-600"
           />
           <input
             type="text"
@@ -212,11 +259,11 @@ function MainVideo({ data }) {
 
             {/* Comment Items */}
             {data.comments.map((comment, i) => (
-              <div key={i} className="flex space-x-3 mb-4">
+              <div key={i} className="flex space-x-3 mb-4  ">
                 <img
                   src={comment.owner.avatar}
                   alt=""
-                  className="w-8 h-8 rounded-full mt-2"
+                  className="w-8 h-8 rounded-full mt-2 border-red-600 border-2"
                 />
                 <div>
                   <div className="flex items-center mb-1">
@@ -244,6 +291,36 @@ function MainVideo({ data }) {
                       Reply
                     </button>
                   </div>
+                </div>
+                <div className="relative mt-1">
+                  <div
+                    className="cursor-pointer p-1 hover:bg-gray-200 rounded-full transition"
+                    onClick={() =>
+                      model == null ? setModel(i) : setModel(null)
+                    }
+                  >
+                    <BsThreeDotsVertical className="text-xl text-gray-600" />
+                  </div>
+
+                  {model === i && (
+                    <div className="absolute -top-4 -right-28 mt-6 w-28 bg-white border rounded-lg shadow-lg z-10 flex flex-col">
+                      <button
+                        onClick={() =>
+                          handleUpdate(comment._id, comment.comment)
+                        }
+                        className="px-4 py-2 text-left hover:bg-green-100 transition text-sm text-gray-700"
+                      >
+                        <CiEdit /> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(comment._id)}
+                        className="px-4 py-2 text-left hover:bg-red-100 transition text-sm text-red-600"
+                      >
+                        <MdDeleteOutline />
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

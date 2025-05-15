@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const channelSlice = createSlice({
   name: "channel",
   initialState: {
-    item: JSON.parse(sessionStorage.getItem("channel")),
+    item: JSON.parse(sessionStorage.getItem("channel")) || {},
   },
   reducers: {
     addChannel: (state, action) => {

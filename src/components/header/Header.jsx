@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addSearch } from "../../slices/searchSlice";
 import { addUser } from "../../slices/userSlice";
 import { addChannel } from "../../slices/channelSlice";
+import toast, { Toaster } from "react-hot-toast";
 
 function Header({ sidebarState, setSidebarState, popup, setPopup }) {
   const [input, setInput] = useState("");
@@ -15,8 +16,8 @@ function Header({ sidebarState, setSidebarState, popup, setPopup }) {
   const { pathname } = useLocation();
   const searchIcon = useRef();
   const navigate = useNavigate();
+  const notify = (x) => toast(x);
   const user = useSelector((store) => store.user.item);
-
   const handleSearch = () => {
     dispatch(addSearch(input));
   };
@@ -26,6 +27,7 @@ function Header({ sidebarState, setSidebarState, popup, setPopup }) {
     }
   };
   function handleSignOut() {
+    notify("sign-out sucessfully");
     setPopup(!popup);
     sessionStorage.clear();
     dispatch(addUser({}));
@@ -41,6 +43,17 @@ function Header({ sidebarState, setSidebarState, popup, setPopup }) {
         className="flex fixed z-50 items-center justify-between w-full top-0 bg-white  py-3 px-2 sm:px-4 md:px-6 lg:px-8 shadow-sm"
         onClick={() => setSidebarState(false)}
       >
+        <Toaster
+          toastOptions={{
+            duration: 2000,
+            removeDelay: 1000,
+            style: {
+              fontWeight: "bold",
+              background: "white",
+              color: "black",
+            },
+          }}
+        />
         <div className="flex items-center gap-2 sm:gap-4">
           <GiHamburgerMenu
             className="text-xl cursor-pointer hover:text-red-600 transition-colors duration-300"
@@ -109,6 +122,14 @@ function Header({ sidebarState, setSidebarState, popup, setPopup }) {
 
             {popup && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 z-10 transform transition-all duration-200 ease-in-out">
+                <div className=" flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <img
+                    src={user.newuser.avatar}
+                    alt=""
+                    className="w-10 h-10 rounded-full border-red-500 border-2"
+                  />
+                  <span className="font-bold ">{user.newuser.username}</span>
+                </div>
                 {channel?.channelState ? (
                   // If user has a channel, show channel link
                   <NavLink

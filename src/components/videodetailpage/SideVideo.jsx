@@ -48,14 +48,17 @@ function SideVideo({ data }) {
 
         {/* Views and date */}
         <div className="text-xs text-gray-500 mt-1">
-          <span>{countSimple(data.statistics.viewCount)} views</span>
+          <span>{countSimple(68666)} views</span>
           <span className="mx-1">•</span>
           <span>
-            {new Date(data.snippet.publishedAt).toLocaleDateString(undefined, {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            })}
+            {new Date(data.publishedAt || data.createdAt).toLocaleDateString(
+              undefined,
+              {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              }
+            )}
           </span>
         </div>
       </div>

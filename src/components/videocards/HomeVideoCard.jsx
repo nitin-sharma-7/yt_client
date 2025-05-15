@@ -1,5 +1,5 @@
-import React from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { NavLink } from "react-router";
 
 function HomeVideoCard({ data }) {
   // Function to format view count
@@ -11,12 +11,14 @@ function HomeVideoCard({ data }) {
     }
     return viewCount;
   };
-
   return (
     <div className="sm:w-[480px]  mb-6 md:w-80  cursor-pointer">
-      <div className="relative w-full mb-2 overflow-hidden rounded-lg bg-black">
+      <NavLink
+        to={`/video/${data._id}`}
+        className="relative w-full mb-2 overflow-hidden rounded-lg bg-black"
+      >
         <img
-          className="w-full h-52 object-fill"
+          className="w-full h-52 object-fill rounded-lg"
           src={data.snippet.thumbnails.maxres.url}
           alt={data.snippet.title}
         />
@@ -26,9 +28,9 @@ function HomeVideoCard({ data }) {
             .replace("M", ":")
             .replace("S", "")}
         </div>
-      </div>
+      </NavLink>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 mt-2">
         <img
           src={data.snippet.thumbnails.default.url}
           alt={data.snippet.channelTitle}
@@ -40,9 +42,9 @@ function HomeVideoCard({ data }) {
             <h3 className="font-medium text-sm leading-tight line-clamp-2 mb-1">
               {data.snippet.title}
             </h3>
-            <button className="text-gray-500 hover:text-gray-700 p-1">
+            <div className="hover:bg-gray-300  p-1 transition-all duration-300 rounded-full ">
               <BsThreeDotsVertical />
-            </button>
+            </div>
           </div>
 
           <div className="flex flex-col text-xs text-gray-500">
@@ -50,11 +52,14 @@ function HomeVideoCard({ data }) {
               {data.snippet.channelTitle}
             </span>
             <span>
-              {formatViews(data.statistics.viewCount)} views •
-              {new Date(data.snippet.publishedAt).toLocaleDateString(
-                undefined,
-                { year: "numeric", month: "short", day: "numeric" }
-              )}
+              {formatViews(73749)} views •&nbsp;
+              {new Date(
+                data.publishedAt || data.publishedAt
+              ).toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              })}
             </span>
           </div>
         </div>

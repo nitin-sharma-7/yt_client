@@ -1,19 +1,23 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink, useParams } from "react-router";
 import axios from "axios";
 import { FaVideo } from "react-icons/fa";
 
+import ChannelVideoCard from "./ChannelVideoCard";
+
 function ChannelPage() {
+  const [editPopup, setEditPopup] = useState(null);
   const [data, setdata] = useState({});
   const { id } = useParams();
   const user = useSelector((store) => store.user.item);
   const channel = useSelector((store) => store.channel.item);
+
   useEffect(() => {
     async function getdata() {
       const res = await fetch(`http://localhost:3000/channel/${id}`);
-      const data = await res.json();
-      setdata(data);
+      const x = await res.json();
+      setdata(x);
     }
     getdata();
   }, [id]);
@@ -64,8 +68,8 @@ function ChannelPage() {
                   {data.channelName}
                 </h1>
                 <div className="text-gray-600 text-sm flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-1">
-                  <span>@{data.handle}</span>
-                  <span>{data.subscribers?.toLocaleString()} subscribers</span>
+                  <span>@{data.channelName}</span>
+                  <span>{data.subscribers?.length} subscribers</span>
                   <span>{data.videos?.length} videos</span>
                 </div>
                 <p className="mt-2 text-sm text-gray-700 line-clamp-2 md:line-clamp-none">
@@ -126,10 +130,19 @@ function ChannelPage() {
         </div>
 
         {/* Videos Grid */}
-        <div className="py-6">
+        <div className="py-6 w-full">
           <h2 className="text-lg font-semibold mb-4">Recent Videos</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-10">
             {/* videocard use fetch data by video id and render */}
+            {data?.videos?.map((val, i) => (
+              <ChannelVideoCard
+                data={val}
+                key={val._id}
+                index={i}
+                editPopup={editPopup}
+                setEditPopup={setEditPopup}
+              />
+            ))}
           </div>
         </div>
       </div>
