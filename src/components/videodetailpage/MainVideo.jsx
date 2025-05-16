@@ -8,6 +8,7 @@ import { IoMdShareAlt } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
 import { useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
+import { URL } from "../../URL.js";
 
 function MainVideo({ data }) {
   const [showComents, setShowComents] = useState(false);
@@ -30,7 +31,7 @@ function MainVideo({ data }) {
     };
     try {
       const { data: res } = await axios.post(
-        "http://localhost:3000/comment/create",
+        `${URL}/comment/create`,
         commentData,
         {
           headers: {
@@ -49,16 +50,13 @@ function MainVideo({ data }) {
   }
   async function handleDelete(x) {
     try {
-      const { data: res } = await axios.delete(
-        "http://localhost:3000/comment/delete",
-        {
-          data: { commentId: x, videoId: data._id },
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `x ${user.token}`,
-          },
-        }
-      );
+      const { data: res } = await axios.delete(`${URL}/comment/delete`, {
+        data: { commentId: x, videoId: data._id },
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `x ${user.token}`,
+        },
+      });
       user.token
         ? notify(" comment deleted sucessfully")
         : notify("Plese signin first");

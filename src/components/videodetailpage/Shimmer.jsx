@@ -19,7 +19,6 @@ const Shimmer = ({
   );
 };
 
-// Predefined shimmer components for common use cases
 export const VideoCardShimmer = () => (
   <div className="flex flex-col">
     <Shimmer height="h-40" rounded="rounded-lg" />

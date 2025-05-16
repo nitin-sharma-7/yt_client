@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { addChannel } from "../../slices/channelSlice.js";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { URL } from "../../URL.js";
 function CreateChannel() {
   const user = useSelector((store) => store.user.item);
 
@@ -32,7 +33,7 @@ function CreateChannel() {
   async function post(data) {
     try {
       const { data: channelDataRes } = await axios.post(
-        "http://localhost:3000/channel",
+        `${URL}/channel`,
         data,
         {
           headers: {

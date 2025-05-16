@@ -5,6 +5,7 @@ import { addUser } from "../../slices/userSlice";
 import { useNavigate } from "react-router";
 import { addChannel } from "../../slices/channelSlice";
 import toast, { Toaster } from "react-hot-toast";
+import { URL } from "../../URL";
 function SignPage() {
   const [isLog, setIsLog] = useState(true);
   const [user, setUser] = useState(() =>
@@ -31,14 +32,11 @@ function SignPage() {
 
   async function post(data) {
     try {
-      const res = await fetch(
-        `http://localhost:3000/${isLog ? "signup" : "signin"}`,
-        {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const res = await fetch(`${URL}/${isLog ? "signup" : "signin"}`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: { "Content-Type": "application/json" },
+      });
 
       // handle the response here
       const userdata = await res.json();

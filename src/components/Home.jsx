@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import findTags from "../utils/findTags.js";
 import { addSearch } from "../slices/searchSlice.js";
 import ShimmerVideoCard from "./videocards/ShimmerVideoCard.jsx";
+import { URL } from "../URL.js";
 
 function Home() {
   const search = useSelector((store) => store.search.searchItem);
@@ -16,7 +17,7 @@ function Home() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch("http://localhost:3000/videos");
+        const response = await fetch(`${URL}/videos`);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }

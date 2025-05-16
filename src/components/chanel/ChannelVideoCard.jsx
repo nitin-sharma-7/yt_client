@@ -4,6 +4,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { URL } from "../../URL";
+
 function ChannelVideoCard({ data, editPopup, setEditPopup, index }) {
   const [updateVideo, setUpdateVideo] = useState({
     title: "",
@@ -17,15 +19,12 @@ function ChannelVideoCard({ data, editPopup, setEditPopup, index }) {
   const user = useSelector((store) => store.user.item);
   async function handleDelete(id) {
     try {
-      const { data: res } = await axios.delete(
-        `http://localhost:3000/video/delete/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `channelDataRes ${user.token}`,
-          },
-        }
-      );
+      const { data: res } = await axios.delete(`${URL}/video/delete/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `channelDataRes ${user.token}`,
+        },
+      });
       navigate("/");
       user.token && notify(res.message);
     } catch (error) {

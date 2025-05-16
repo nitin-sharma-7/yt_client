@@ -5,6 +5,7 @@ import axios from "axios";
 import { FaVideo } from "react-icons/fa";
 
 import ChannelVideoCard from "./ChannelVideoCard";
+import { URL } from "../../URL.js";
 
 function ChannelPage() {
   const [editPopup, setEditPopup] = useState(null);
@@ -15,7 +16,7 @@ function ChannelPage() {
 
   useEffect(() => {
     async function getdata() {
-      const res = await fetch(`http://localhost:3000/channel/${id}`);
+      const res = await fetch(`${URL}/channel/${id}`);
       const x = await res.json();
       setdata(x);
     }
@@ -24,7 +25,7 @@ function ChannelPage() {
   const handleSubs = async () => {
     try {
       const { data: res } = await axios.post(
-        "http://localhost:3000/channel/subscribe",
+        `${URL}/channel/subscribe`,
         { userId: user.newuser._id, channelId: channel.newChannel._id },
         {
           headers: {

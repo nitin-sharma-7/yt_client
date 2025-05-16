@@ -9,6 +9,12 @@ function MainShimmer() {
           <VideoCardShimmer />
           <VideoCardShimmer />
           <VideoCardShimmer />
+          <VideoCardShimmer />
+          <VideoCardShimmer />
+          <VideoCardShimmer />
+          <VideoCardShimmer />
+          <VideoCardShimmer />
+          <VideoCardShimmer />
         </div>
       </div>
     </div>

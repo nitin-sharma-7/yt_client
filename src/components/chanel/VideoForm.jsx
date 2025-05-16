@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
+import { URL } from "../../URL";
 function VideoForm() {
   const [video, setVideo] = useState({
     title: "",
@@ -51,16 +52,12 @@ function VideoForm() {
   const navigate = useNavigate();
   async function post(data) {
     try {
-      const { data: res } = await axios.post(
-        "http://localhost:3000/video",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `x ${user.token}`,
-          },
-        }
-      );
+      const { data: res } = await axios.post(`${URL}/video`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `x ${user.token}`,
+        },
+      });
       if (res) {
         notify("Video uploaded sucessfully");
         navigate("/");

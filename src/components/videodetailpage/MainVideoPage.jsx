@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import MainVideo from "./MainVideo";
 import SideVideo from "./SideVideo";
 import { NavLink, useParams } from "react-router";
-
+import { URL } from "../../URL.js";
 function MainVideoPage() {
   const { videoID } = useParams();
   const [mainVideo, setMainVideo] = useState({});
@@ -10,7 +10,7 @@ function MainVideoPage() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch("http://localhost:3000/videos");
+        const response = await fetch(`${URL}/videos`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);

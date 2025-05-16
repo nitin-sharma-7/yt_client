@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
-
+import { URL } from "../../URL";
 function EditVideoForm() {
   const [video, setVideo] = useState({
     title: "",
@@ -27,15 +27,12 @@ function EditVideoForm() {
   useEffect(() => {
     async function getVideo() {
       try {
-        const { data: res } = await axios.get(
-          `http://localhost:3000/video/${id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              authorization: `token ${user.token}`,
-            },
-          }
-        );
+        const { data: res } = await axios.get(`${URL}/video/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `token ${user.token}`,
+          },
+        });
 
         // console.log(res);
         if (res) {
@@ -56,7 +53,7 @@ function EditVideoForm() {
 
     try {
       const { data: res } = await axios.put(
-        `http://localhost:3000/video/update/${id}`,
+        `${URL}/video/update/${id}`,
         {
           title: video.title,
           description: video.description,
