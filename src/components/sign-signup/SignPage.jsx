@@ -72,7 +72,7 @@ function SignPage() {
         setIsLog(false);
         dispatch(addUser(userdata));
         const { username, password } = userdata?.newUser;
-        setUser({ username });
+        setUser({ username, password: "" });
       }
     } catch (error) {
       // handle error here
