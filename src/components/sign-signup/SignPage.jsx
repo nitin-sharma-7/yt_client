@@ -23,7 +23,6 @@ function SignPage() {
   const handleClick = (e) => {
     e.preventDefault();
     post(user);
-    console.log("clicked");
   };
 
   const handlechange = (e) => {
@@ -64,7 +63,7 @@ function SignPage() {
         );
         dispatch(
           addChannel({
-            newChannel: userdata.newUser.channel,
+            newChannel: userdata.newuser.channel,
             channelState: true,
           })
         );
@@ -75,7 +74,7 @@ function SignPage() {
         setIsLog(false);
         dispatch(addUser(userdata));
         const { username, password } = userdata?.newUser;
-        setUser({ username, password });
+        setUser({ username });
       }
     } catch (error) {
       // handle error here

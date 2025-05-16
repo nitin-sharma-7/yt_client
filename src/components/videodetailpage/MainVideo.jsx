@@ -236,12 +236,17 @@ function MainVideo({ data }) {
             onChange={(e) => {
               setComment(e.target.value);
             }}
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                handlePost();
+              }
+            }}
             value={comment}
           />
           {comment.length ? (
             <div
               className="ml-4 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full px-2 py-1 text-sm"
-              onClick={handlePost}
+              onClick={() => handlePost()}
             >
               post
             </div>

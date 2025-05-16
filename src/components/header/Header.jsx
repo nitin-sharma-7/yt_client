@@ -80,8 +80,8 @@ function Header({ sidebarState, setSidebarState, popup, setPopup }) {
               type="text"
               name="search-input"
               value={input}
-              placeholder="Search YOUTUBE..."
-              className="w-full px-4 h-8 border-r-0 border-2 border-gray-300 rounded-l-full outline-none transition-colors duration-300 focus:border-red-600 focus:border-r-2"
+              placeholder="Search..."
+              className="w-full px-4 h-8 border-r-0 border-2 border-gray-300 rounded-l-full outline-none transition-colors duration-300 text-sm focus:border-red-600 focus:border-r-2"
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => handleInputClick(e)}
             />
@@ -125,7 +125,7 @@ function Header({ sidebarState, setSidebarState, popup, setPopup }) {
                 <div className=" flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                   <img
                     src={user.newuser.avatar}
-                    alt=""
+                    alt={user.newuser.username}
                     className="w-10 h-10 rounded-full border-red-500 border-2"
                   />
                   <span className="font-bold ">{user.newuser.username}</span>

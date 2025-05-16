@@ -132,17 +132,19 @@ function ChannelPage() {
         {/* Videos Grid */}
         <div className="py-6 w-full">
           <h2 className="text-lg font-semibold mb-4">Recent Videos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-10">
-            {/* videocard use fetch data by video id and render */}
-            {data?.videos?.map((val, i) => (
-              <ChannelVideoCard
-                data={val}
-                key={val._id}
-                index={i}
-                editPopup={editPopup}
-                setEditPopup={setEditPopup}
-              />
-            ))}
+          <div className="flex justify-center mt-4 px-4 md:px-8 sm:ml-16 md:ml-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-10">
+              {/* videocard use fetch data by video id and render */}
+              {data?.videos?.map((val, i) => (
+                <ChannelVideoCard
+                  data={val}
+                  key={val._id}
+                  index={i}
+                  editPopup={editPopup}
+                  setEditPopup={setEditPopup}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import findTags from "../utils/findTags.js";
 import { addSearch } from "../slices/searchSlice.js";
+import ShimmerVideoCard from "./videocards/ShimmerVideoCard.jsx";
 
 function Home() {
   const search = useSelector((store) => store.search.searchItem);
@@ -46,7 +47,6 @@ function Home() {
 
     setFilteredVideos(filtered);
   }, [search, videos]);
-
   return (
     <>
       <div className="flex flex-grow mt-20 px-4 md:px-8 sm:ml-16 md:ml-20 overflow-x-scroll scrollbar-hide whitespace-nowrap sticky top-14 py-2 z-10 bg-white">
@@ -78,15 +78,13 @@ function Home() {
 
       <div className="flex justify-center mt-4 px-4 md:px-8 sm:ml-16 md:ml-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 lg:gap-10">
-          {filteredVideos.length ? (
-            filteredVideos.map((video) => (
-              <HomeVideoCard data={video} key={video._id} />
-            ))
-          ) : (
-            <div className="col-span-full text-center py-10">
-              No videos found
-            </div>
-          )}
+          {filteredVideos.length
+            ? filteredVideos.map((video) => (
+                <HomeVideoCard data={video} key={video._id} />
+              ))
+            : Array(10)
+                .fill(null)
+                .map((_, i) => <ShimmerVideoCard key={i} />)}
         </div>
       </div>
     </>
