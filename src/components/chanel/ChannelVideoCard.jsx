@@ -4,7 +4,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { URL } from "../../URL";
+import { URL } from "../../URL.js";
 
 function ChannelVideoCard({ data, editPopup, setEditPopup, index }) {
   const [updateVideo, setUpdateVideo] = useState({

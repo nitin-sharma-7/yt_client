@@ -3,21 +3,26 @@ import "./index.css";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Home from "./components/Home.jsx";
-// import MainVideoPage from "./components/videodetailpage/MainVideoPage.jsx";
+import ErrorComponent from "./components/errorPage/ErrorComponent.jsx";
 import appStore from "./store/appStore.js";
 import { Provider } from "react-redux";
-import SignPage from "./components/sign-signup/SignPage.jsx";
-import ChannelPage from "./components/chanel/ChanelPage.jsx";
-import CreateChannel from "./components/chanel/CreateChanel.jsx";
-import VideoForm from "./components/chanel/VideoForm.jsx";
-import EditVideoForm from "./components/chanel/EditVideoForm.jsx";
-import ErrorComponent from "./components/errorPage/ErrorComponent.jsx";
-
 import { lazy, Suspense } from "react";
 import MainShimmer from "./components/videodetailpage/MainShimmer.jsx";
+
+// Lazy-loaded routes
 const MainVideoPage = lazy(() =>
   import("./components/videodetailpage/MainVideoPage.jsx")
 );
+const SignPage = lazy(() => import("./components/sign-signup/SignPage.jsx"));
+const ChannelPage = lazy(() => import("./components/chanel/ChanelPage.jsx"));
+const CreateChannel = lazy(() =>
+  import("./components/chanel/CreateChanel.jsx")
+);
+const VideoForm = lazy(() => import("./components/chanel/VideoForm.jsx"));
+const EditVideoForm = lazy(() =>
+  import("./components/chanel/EditVideoForm.jsx")
+);
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,23 +43,43 @@ const router = createBrowserRouter([
       },
       {
         path: "/sign",
-        element: <SignPage />,
+        element: (
+          <Suspense>
+            <SignPage />
+          </Suspense>
+        ),
       },
       {
         path: "/channel/:id",
-        element: <ChannelPage />,
+        element: (
+          <Suspense>
+            <ChannelPage />
+          </Suspense>
+        ),
       },
       {
         path: "/channel/create",
-        element: <CreateChannel />,
+        element: (
+          <Suspense>
+            <CreateChannel />
+          </Suspense>
+        ),
       },
       {
         path: "/video/upload",
-        element: <VideoForm />,
+        element: (
+          <Suspense>
+            <VideoForm />
+          </Suspense>
+        ),
       },
       {
         path: "/video/update/:id",
-        element: <EditVideoForm />,
+        element: (
+          <Suspense>
+            <EditVideoForm />
+          </Suspense>
+        ),
       },
     ],
   },
