@@ -7,39 +7,40 @@ function MainVideoPage() {
   const { videoID } = useParams();
   const [mainVideo, setMainVideo] = useState({});
   const [recommendedVideos, setRecommendedVideos] = useState([]);
-  useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const response = await fetch(`${URL}/videos`);
+  const fetchVideos = async () => {
+    try {
+      const response = await fetch(`${URL}/videos`);
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const videos = await response.json();
-
-        // Find the main video by ID
-        const currentVideo = videos.find((video) => video._id == videoID);
-        if (currentVideo) {
-          setMainVideo(currentVideo);
-        } else {
-          throw new Error("Video not found");
-        }
-
-        // Set all videos for the sidebar
-        setRecommendedVideos(videos);
-      } catch (err) {
-        console.log(err);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    };
 
+      const videos = await response.json();
+
+      // Find the main video by ID
+      const currentVideo = videos.find((video) => video._id == videoID);
+      if (currentVideo) {
+        setMainVideo(currentVideo);
+      } else {
+        throw new Error("Video not found");
+      }
+
+      // Set all videos for the sidebar
+      setRecommendedVideos(videos);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
     fetchVideos();
   }, [videoID]);
 
   return (
     <div className="mt-20 md:flex px-4 gap-3">
       <div className="md:w-[60%]">
-        {Object.keys(mainVideo).length > 0 && <MainVideo data={mainVideo} />}
+        {Object.keys(mainVideo).length > 0 && (
+          <MainVideo data={mainVideo} fetchVideos={fetchVideos} />
+        )}
       </div>
       <div className="md:w-[40%] flex flex-col gap-3">
         {recommendedVideos

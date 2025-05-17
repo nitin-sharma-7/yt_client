@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
 import { URL } from "../../URL.js";
 
-function MainVideo({ data }) {
+function MainVideo({ data, fetchVideos }) {
   const [showComents, setShowComents] = useState(false);
   const [more, setMore] = useState(false);
   const [comment, setComment] = useState("");
@@ -47,6 +47,7 @@ function MainVideo({ data }) {
       console.log("error", error.message);
     }
     setComment("");
+    fetchVideos();
   }
   async function handleDelete(x) {
     try {
@@ -64,12 +65,14 @@ function MainVideo({ data }) {
       console.log("error", error.response?.data || error.message);
     }
     setModel(null);
+    fetchVideos();
   }
 
   function handleUpdate(x, y) {
     handleDelete(x);
     setComment(y);
     setModel(null);
+    fetchVideos();
   }
 
   return (
