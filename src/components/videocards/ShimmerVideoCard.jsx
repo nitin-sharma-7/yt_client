@@ -1,6 +1,6 @@
 const ShimmerVideoCard = () => {
   return (
-    <div className=" sm:w-[480px]  mb-6 w-80 animate-pulse">
+    <div className=" sm:w-[480px] w-60  mb-6 md:w-80 animate-pulse">
       <div className="w-full h-52 bg-gray-300 rounded-lg mb-2" />
 
       <div className="flex gap-2 mt-2">

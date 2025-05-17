@@ -110,7 +110,7 @@ function MainVideo({ data }) {
           }}
         />
         {/* Video Title */}
-        <h1 className="text-xl font-bold mt-3 mb-2">{data.snippet.title}</h1>
+        <h2 className="text-xl font-bold mt-3 mb-2">{data.snippet.title}</h2>
 
         {/* Video Info Bar */}
         <div className="flex flex-wrap justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
