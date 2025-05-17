@@ -5,7 +5,7 @@ import { addUser } from "../../slices/userSlice";
 import { useNavigate } from "react-router";
 import { addChannel } from "../../slices/channelSlice";
 import toast, { Toaster } from "react-hot-toast";
-import { URL } from "../../URL";
+import { URL } from "../../URL.js";
 function SignPage() {
   const [isLog, setIsLog] = useState(true);
   const [user, setUser] = useState(() =>
@@ -76,6 +76,7 @@ function SignPage() {
       }
     } catch (error) {
       // handle error here
+      notify(error.message);
       console.log("error", error.message);
     }
   }

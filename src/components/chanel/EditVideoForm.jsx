@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
-import { URL } from "../../URL";
+import { URL } from "../../URL.js";
 function EditVideoForm() {
   const [video, setVideo] = useState({
     title: "",
