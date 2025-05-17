@@ -79,7 +79,7 @@ function SignPage() {
       }
     } catch (error) {
       // handle error here
-      notify(error.message);
+      notify(error);
       // console.log("error", error.message);
     }
   }
