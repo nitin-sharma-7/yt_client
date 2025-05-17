@@ -77,6 +77,9 @@ function SignPage() {
       if (!userdata.sucess) {
         notify(userdata.message);
       }
+      if (!userdata.usernotfound) {
+        notify(userdata.message);
+      }
     } catch (error) {
       // handle error here
       notify(error.message);
