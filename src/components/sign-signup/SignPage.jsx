@@ -74,10 +74,13 @@ function SignPage() {
         const { username, password } = userdata?.newUser;
         setUser({ username, password: "" });
       }
+      if (!userdata.sucess) {
+        notify(userdata.message);
+      }
     } catch (error) {
       // handle error here
       notify(error.message);
-      console.log("error", error.message);
+      // console.log("error", error.message);
     }
   }
 
