@@ -119,7 +119,7 @@ function MainVideo({ data, fetchVideos }) {
         <div className="flex flex-wrap justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3 mb-2 md:mb-0">
             <img
-              src={data.snippet.channelId.avatar}
+              src={data.snippet.channelId?.avatar}
               alt=""
               className="w-10 h-10 rounded-full object-cover"
             />
@@ -264,82 +264,83 @@ function MainVideo({ data, fetchVideos }) {
             </button>
 
             {/* Comment Items */}
-            {data.comments.map((comment, i) => (
-              <div key={i} className="flex space-x-3 mb-4 justify-between  ">
-                <div className="flex gap-2">
-                  <img
-                    src={comment.owner.avatar}
-                    alt=""
-                    className="w-8 h-8 rounded-full mt-2 border-red-600 border-2"
-                  />
-                  <div>
-                    <div className="flex items-center mb-1">
-                      <span className="font-medium mr-2">
-                        {comment.owner.username}
-                      </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {new Date(comment.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-sm mb-1">{comment.comment}</p>
-                    <div className="flex items-center text-sm space-x-4">
-                      <button className="flex items-center">
-                        <span className="mr-1">
-                          <AiOutlineLike />
+            {data.comments &&
+              data.comments.map((comment, i) => (
+                <div key={i} className="flex space-x-3 mb-4 justify-between  ">
+                  <div className="flex gap-2">
+                    <img
+                      src={comment.owner?.avatar}
+                      alt=""
+                      className="w-8 h-8 rounded-full mt-2 border-red-600 border-2"
+                    />
+                    <div>
+                      <div className="flex items-center mb-1">
+                        <span className="font-medium mr-2">
+                          {comment.owner?.username}
                         </span>
-                        <span>{countSimple(comment.likeCount)}</span>
-                      </button>
-                      <button className="flex items-center">
-                        <span>
-                          <AiOutlineDislike />
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          {new Date(comment.createdAt).toLocaleDateString()}
                         </span>
-                      </button>
-                      <button className="text-gray-500 dark:text-gray-400">
-                        Reply
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div className="relative mt-1">
-                  <div
-                    className="cursor-pointer p-1 hover:bg-gray-200 rounded-full transition"
-                    onClick={() =>
-                      model == null ? setModel(i) : setModel(null)
-                    }
-                  >
-                    <BsThreeDotsVertical className="text-xl text-gray-600" />
-                  </div>
-
-                  {model === i && (
-                    <div className="absolute top right-0 mt-6 w-28 bg-white border rounded-lg shadow-lg z-10 flex flex-col">
-                      {user?.newuser?._id == comment?.owner._id ? (
-                        <div>
-                          <button
-                            onClick={() =>
-                              handleUpdate(comment._id, comment.comment)
-                            }
-                            className="px-4 py-2 text-left hover:bg-green-100 transition text-sm text-gray-700"
-                          >
-                            <CiEdit /> Edit
-                          </button>
-                          <button
-                            onClick={() => handleDelete(comment._id)}
-                            className="px-4 py-2 text-left hover:bg-red-100 transition text-sm text-red-600"
-                          >
-                            <MdDeleteOutline />
-                            Delete
-                          </button>
-                        </div>
-                      ) : (
-                        <button className="px-4 py-2 text-left hover:bg-red-100 transition text-sm text-red-600">
-                          Report
+                      </div>
+                      <p className="text-sm mb-1">{comment.comment}</p>
+                      <div className="flex items-center text-sm space-x-4">
+                        <button className="flex items-center">
+                          <span className="mr-1">
+                            <AiOutlineLike />
+                          </span>
+                          <span>{countSimple(comment.likeCount)}</span>
                         </button>
-                      )}
+                        <button className="flex items-center">
+                          <span>
+                            <AiOutlineDislike />
+                          </span>
+                        </button>
+                        <button className="text-gray-500 dark:text-gray-400">
+                          Reply
+                        </button>
+                      </div>
                     </div>
-                  )}
+                  </div>
+                  <div className="relative mt-1">
+                    <div
+                      className="cursor-pointer p-1 hover:bg-gray-200 rounded-full transition"
+                      onClick={() =>
+                        model == null ? setModel(i) : setModel(null)
+                      }
+                    >
+                      <BsThreeDotsVertical className="text-xl text-gray-600" />
+                    </div>
+
+                    {model === i && (
+                      <div className="absolute top right-0 mt-6 w-28 bg-white border rounded-lg shadow-lg z-10 flex flex-col">
+                        {user?.newuser?._id == comment?.owner._id ? (
+                          <div>
+                            <button
+                              onClick={() =>
+                                handleUpdate(comment._id, comment.comment)
+                              }
+                              className="px-4 py-2 text-left hover:bg-green-100 transition text-sm text-gray-700"
+                            >
+                              <CiEdit /> Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(comment._id)}
+                              className="px-4 py-2 text-left hover:bg-red-100 transition text-sm text-red-600"
+                            >
+                              <MdDeleteOutline />
+                              Delete
+                            </button>
+                          </div>
+                        ) : (
+                          <button className="px-4 py-2 text-left hover:bg-red-100 transition text-sm text-red-600">
+                            Report
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         ) : (
           ""
