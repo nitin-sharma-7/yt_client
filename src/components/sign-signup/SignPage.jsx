@@ -7,7 +7,12 @@ import { addChannel } from "../../slices/channelSlice";
 import toast, { Toaster } from "react-hot-toast";
 import { URL } from "../../URL.js";
 function SignPage() {
+  // Toggle between signup (true) and signin (false) modes
   const [isLog, setIsLog] = useState(true);
+
+  // Dynamic state initialization based on current mode (signup or signin)
+  // For signup: initialize with all required fields
+  // For signin: only username and password are needed
   const [user, setUser] = useState(() =>
     isLog
       ? {
@@ -18,33 +23,47 @@ function SignPage() {
         }
       : { username: "", password: "" }
   );
+
+  // Toast notification helper function
   const notify = (x) => toast(x);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // Form submission handler
   const handleClick = (e) => {
     e.preventDefault();
     post(user);
   };
 
+  // Handle form input changes by updating specific field while preserving other data
   const handlechange = (e) => {
     setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // Function to handle API communication for both signup and signin
   async function post(data) {
     try {
+      // Dynamic endpoint selection based on current mode (signup/signin)
       const res = await fetch(`${URL}/${isLog ? "signup" : "signin"}`, {
         method: "POST",
         body: JSON.stringify(data),
         headers: { "Content-Type": "application/json" },
       });
 
-      // handle the response here
+      // Process API response and handle different success scenarios
       const userdata = await res.json();
+
+      // Case 1: User successfully authenticated with token
+      // Save user data to Redux and session storage, then redirect to home
       if (userdata?.token) {
         dispatch(addUser(userdata));
         sessionStorage.setItem("user", JSON.stringify(userdata));
         navigate("/");
       }
+
+      // Case 2: New user with channel was created
+      // Save channel data to Redux and session storage
+      // Note: The duplicate dispatch call appears intentional for redundancy
       if (userdata?.newuser?.channel) {
         dispatch(
           addChannel({
@@ -67,6 +86,9 @@ function SignPage() {
         );
         navigate("/");
       }
+
+      // Case 3: Successful signup but needs to proceed to signin
+      // Switch to signin mode and pre-fill username from signup
       if (userdata?.state) {
         notify("Sign-Up sucessfully");
         setIsLog(false);
@@ -74,19 +96,22 @@ function SignPage() {
         const { username, password } = userdata?.newUser;
         setUser({ username, password: "" });
       }
+
+      // Case 4: Error message from server
       if (!userdata.sucess) {
         notify(userdata.message);
       }
     } catch (error) {
-      // handle error here
+      // Handle any network or unexpected errors
       notify(error);
       // console.log("error", error.message);
     }
   }
 
-  // once login remove this sign form show a logo at header
+  // Render different form fields based on current mode (signup/signin)
   return (
     <div className="flex justify-center items-center min-h-screen  mt-20">
+      {/* Toast notification configuration */}
       <Toaster
         toastOptions={{
           duration: 2000,
@@ -106,6 +131,7 @@ function SignPage() {
         </div>
 
         <div className="mt-8">
+          {/* Conditional rendering based on isLog state */}
           {isLog ? (
             <div className="space-y-6">
               <div>
@@ -244,6 +270,7 @@ function SignPage() {
             </div>
           )}
 
+          {/* Toggle between signup and signin modes */}
           <div className="mt-6 flex items-center justify-center">
             <div className="text-sm">
               <span className="text-gray-500">

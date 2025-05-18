@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router";
 import toast, { Toaster } from "react-hot-toast";
 import { URL } from "../../URL.js";
 function EditVideoForm() {
+  // State to hold video data with default empty values
   const [video, setVideo] = useState({
     title: "",
     description: "",
@@ -12,7 +13,10 @@ function EditVideoForm() {
     tags: "",
     duration: "",
   });
+  // Extract the video ID from URL parameters
   const { id } = useParams();
+
+  // Handle form input changes by updating only the specific field while preserving other data
   const handleChange = (e) => {
     const { name, value } = e.target;
     setVideo((prev) => ({
@@ -20,13 +24,18 @@ function EditVideoForm() {
       [name]: value,
     }));
   };
+
   const notify = (x) => toast(x);
+  // Get authenticated user data from Redux store
   const user = useSelector((store) => store.user.item);
 
   const navigate = useNavigate();
+
+  // Effect hook to fetch video data when component mounts or ID changes
   useEffect(() => {
     async function getVideo() {
       try {
+        // Fetch video data from API using authentication token
         const { data: res } = await axios.get(`${URL}/video/${id}`, {
           headers: {
             "Content-Type": "application/json",
@@ -34,7 +43,8 @@ function EditVideoForm() {
           },
         });
 
-        // console.log(res);
+        // If video data exists, update state with its properties
+        // Handles potential undefined values with fallbacks using logical OR
         if (res) {
           setVideo({
             title: res.snippet.title || "",
@@ -48,10 +58,14 @@ function EditVideoForm() {
     }
     getVideo();
   }, [id]);
+
+  // Handle form submission to update video data
   async function handleUpdate(e) {
     e.preventDefault(); // Prevent page reload
 
     try {
+      // Send PUT request to update video with current form data
+      // Note: Authorization header uses 'channelDataRes' prefix instead of 'token'
       const { data: res } = await axios.put(
         `${URL}/video/update/${id}`,
         {
@@ -68,9 +82,10 @@ function EditVideoForm() {
           },
         }
       );
+      // Show success toast message only if user is authenticated
       user.token && notify(res.message);
-      // console.log("Update Success:", res);
 
+      // Redirect to home page after successful update
       navigate("/");
     } catch (error) {
       console.log("Update Error:", error);

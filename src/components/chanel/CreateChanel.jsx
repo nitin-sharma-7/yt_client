@@ -5,31 +5,43 @@ import { addChannel } from "../../slices/channelSlice.js";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { URL } from "../../URL.js";
+
 function CreateChannel() {
+  // Accessing current user info from Redux store
   const user = useSelector((store) => store.user.item);
 
+  // Local state to handle channel form data
   const [channeldata, setChanneldata] = useState({
     channelName: "",
     handle: "",
     description: "",
     channelBanner: "",
     avatar: "",
-    owner: user.newuser._id,
+    owner: user.newuser._id, // Setting the owner from logged-in user's ID
   });
+
+  // Function to show toast notifications
   const notify = (x) => toast(x);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // Handling changes in form inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setChanneldata((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: value, // Updating specific field in state
     }));
   };
+
+  // Form submit handler
   const handleSubmit = (e) => {
-    e.preventDefault();
-    post(channeldata);
+    e.preventDefault(); // Prevents default page reload on form submission
+    post(channeldata); // Calls API function with current form data
   };
+
+  // Async function to post data to server
   async function post(data) {
     try {
       const { data: channelDataRes } = await axios.post(
@@ -43,25 +55,28 @@ function CreateChannel() {
         }
       );
 
-      // handle the response here
+      // If server responds positively, update state, storage, and redirect
       if (channelDataRes?.channelState) {
-        notify("channel created sucessfully");
-        dispatch(addChannel(channelDataRes));
-        sessionStorage.setItem("channel", JSON.stringify(channelDataRes));
-        navigate(`/channel/${channelDataRes.newChannel._id}`);
+        notify("channel created sucessfully"); // Show success notification
+        dispatch(addChannel(channelDataRes)); // Add to Redux store
+        sessionStorage.setItem("channel", JSON.stringify(channelDataRes)); // Cache channel info
+        navigate(`/channel/${channelDataRes.newChannel._id}`); // Redirect to new channel
       }
     } catch (error) {
-      // handle error here
+      // Logs any error occurred during API call
       console.log("error", error.message);
     }
   }
+
   return (
     <div className="max-w-xl mx-auto my-20 p-6  bg-white rounded-lg shadow-[0_3px_10px_rgb(0,0,0,0.2)]">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
         Create New Channel
       </h2>
 
-      <form method="/" className="space-y-4">
+      {/* Channel creation form */}
+      <form className="space-y-4">
+        {/* Channel Name Input */}
         <div className="flex flex-col">
           <label
             htmlFor="channelName"
@@ -80,6 +95,7 @@ function CreateChannel() {
           />
         </div>
 
+        {/* Handle Input */}
         <div className="flex flex-col">
           <label
             htmlFor="handle"
@@ -103,6 +119,7 @@ function CreateChannel() {
           </div>
         </div>
 
+        {/* Description Input */}
         <div className="flex flex-col">
           <label
             htmlFor="description"
@@ -121,6 +138,7 @@ function CreateChannel() {
           ></textarea>
         </div>
 
+        {/* Channel Banner URL Input */}
         <div className="flex flex-col">
           <label
             htmlFor="channelBanner"
@@ -139,6 +157,7 @@ function CreateChannel() {
           />
         </div>
 
+        {/* Avatar URL Input */}
         <div className="flex flex-col">
           <label
             htmlFor="avatar"
@@ -157,6 +176,7 @@ function CreateChannel() {
           />
         </div>
 
+        {/* Submit Button */}
         <button
           onClick={handleSubmit}
           className="w-full mt-6 px-4 py-2 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"

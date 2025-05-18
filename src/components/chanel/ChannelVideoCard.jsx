@@ -14,9 +14,12 @@ function ChannelVideoCard({ data, editPopup, setEditPopup, index }) {
     tags: "",
     duration: "",
   });
+
   const navigate = useNavigate();
   const notify = (x) => toast(x);
   const user = useSelector((store) => store.user.item);
+
+  // Handles deletion of video by sending DELETE request with authorization
   async function handleDelete(id) {
     try {
       const { data: res } = await axios.delete(`${URL}/video/delete/${id}`, {
@@ -32,6 +35,7 @@ function ChannelVideoCard({ data, editPopup, setEditPopup, index }) {
     }
   }
 
+  // Converts view count into readable format like "1.2K" or "3.4M"
   const formatViews = (viewCount) => {
     if (viewCount >= 1000000) {
       return (viewCount / 1000000).toFixed(1) + "M";
@@ -41,6 +45,7 @@ function ChannelVideoCard({ data, editPopup, setEditPopup, index }) {
 
     return viewCount;
   };
+
   return (
     <div className="sm:w-[480px]  mb-6 md:w-80  cursor-pointer">
       <NavLink
@@ -53,10 +58,13 @@ function ChannelVideoCard({ data, editPopup, setEditPopup, index }) {
           alt={data.snippet.title}
         />
         <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1.5 py-0.5 rounded">
-          {data.contentDetails.duration
-            .replace("PT", "")
-            .replace("M", ":")
-            .replace("S", "")}
+          {
+            // Converts ISO 8601 duration format (e.g. "PT3M45S") to "3:45"
+            data.contentDetails.duration
+              .replace("PT", "")
+              .replace("M", ":")
+              .replace("S", "")
+          }
         </div>
       </NavLink>
 
@@ -76,6 +84,7 @@ function ChannelVideoCard({ data, editPopup, setEditPopup, index }) {
               <div
                 className="hover:bg-gray-200 p-2 transition-all duration-300 rounded-full cursor-pointer"
                 onClick={() =>
+                  // Toggles the visibility of the edit/delete popup
                   editPopup === null ? setEditPopup(index) : setEditPopup(null)
                 }
               >
@@ -107,13 +116,16 @@ function ChannelVideoCard({ data, editPopup, setEditPopup, index }) {
             </span>
             <span>
               {formatViews(73749)} views •&nbsp;
-              {new Date(
-                data.publishedAt || data.publishedAt
-              ).toLocaleDateString(undefined, {
-                year: "numeric",
-                month: "short",
-                day: "numeric",
-              })}
+              {
+                // Converts ISO date string to a readable format like "May 18, 2025"
+                new Date(
+                  data.publishedAt || data.publishedAt
+                ).toLocaleDateString(undefined, {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })
+              }
             </span>
           </div>
         </div>
