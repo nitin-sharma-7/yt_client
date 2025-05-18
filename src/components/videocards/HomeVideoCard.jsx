@@ -31,7 +31,6 @@ function HomeVideoCard({ data }) {
             .replace("PT", "") // Remove PT prefix from ISO 8601 duration format
             .replace("M", ":") // Replace M (minutes) with colon
             .replace("S", "")}{" "}
-          // Remove S (seconds) suffix
         </div>
       </NavLink>
 
