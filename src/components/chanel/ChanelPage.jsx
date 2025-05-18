@@ -13,7 +13,7 @@ function ChannelPage() {
   const { id } = useParams();
   const user = useSelector((store) => store.user.item);
   const channel = useSelector((store) => store.channel.item);
-
+  // fetching the chanel data
   useEffect(() => {
     async function getdata() {
       const res = await fetch(`${URL}/channel/${id}`);
@@ -22,6 +22,8 @@ function ChannelPage() {
     }
     getdata();
   }, [id]);
+
+  // click on subscribe to subscribe the channel
   const handleSubs = async () => {
     try {
       const { data: res } = await axios.post(

@@ -119,7 +119,7 @@ function VideoForm() {
         </label>
 
         <label>
-          Tags (comma separated):
+          Tags (e.g., #tag):
           <input
             type="text"
             name="tags"

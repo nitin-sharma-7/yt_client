@@ -119,7 +119,7 @@ function MainVideo({ data, fetchVideos }) {
         <div className="flex flex-wrap justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center space-x-3 mb-2 md:mb-0">
             <img
-              src={data.snippet.thumbnails.default.url}
+              src={data.snippet.channelId.avatar}
               alt=""
               className="w-10 h-10 rounded-full object-cover"
             />
@@ -213,11 +213,11 @@ function MainVideo({ data, fetchVideos }) {
         {/* for comments show */}
         <div className="py-2  flex gap-4">
           <h2 className="font-bold">
-            {countSimple(data.statistics.commentCount)} Comments
+            {countSimple(data.comments.length)} Comments
           </h2>
           <h2
             onClick={() => setShowComents(!showComents)}
-            className="cursor-pointer"
+            className="cursor-pointer "
           >
             {showComents ? "Hide Comments ▲" : "Show Comments ▼"}
           </h2>
@@ -265,37 +265,39 @@ function MainVideo({ data, fetchVideos }) {
 
             {/* Comment Items */}
             {data.comments.map((comment, i) => (
-              <div key={i} className="flex space-x-3 mb-4  ">
-                <img
-                  src={comment.owner.avatar}
-                  alt=""
-                  className="w-8 h-8 rounded-full mt-2 border-red-600 border-2"
-                />
-                <div>
-                  <div className="flex items-center mb-1">
-                    <span className="font-medium mr-2">
-                      {comment.owner.username}
-                    </span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {new Date(comment.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="text-sm mb-1">{comment.comment}</p>
-                  <div className="flex items-center text-sm space-x-4">
-                    <button className="flex items-center">
-                      <span className="mr-1">
-                        <AiOutlineLike />
+              <div key={i} className="flex space-x-3 mb-4 justify-between  ">
+                <div className="flex gap-2">
+                  <img
+                    src={comment.owner.avatar}
+                    alt=""
+                    className="w-8 h-8 rounded-full mt-2 border-red-600 border-2"
+                  />
+                  <div>
+                    <div className="flex items-center mb-1">
+                      <span className="font-medium mr-2">
+                        {comment.owner.username}
                       </span>
-                      <span>{countSimple(comment.likeCount)}</span>
-                    </button>
-                    <button className="flex items-center">
-                      <span>
-                        <AiOutlineDislike />
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {new Date(comment.createdAt).toLocaleDateString()}
                       </span>
-                    </button>
-                    <button className="text-gray-500 dark:text-gray-400">
-                      Reply
-                    </button>
+                    </div>
+                    <p className="text-sm mb-1">{comment.comment}</p>
+                    <div className="flex items-center text-sm space-x-4">
+                      <button className="flex items-center">
+                        <span className="mr-1">
+                          <AiOutlineLike />
+                        </span>
+                        <span>{countSimple(comment.likeCount)}</span>
+                      </button>
+                      <button className="flex items-center">
+                        <span>
+                          <AiOutlineDislike />
+                        </span>
+                      </button>
+                      <button className="text-gray-500 dark:text-gray-400">
+                        Reply
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div className="relative mt-1">
@@ -309,22 +311,30 @@ function MainVideo({ data, fetchVideos }) {
                   </div>
 
                   {model === i && (
-                    <div className="absolute -top-4 -right-28 mt-6 w-28 bg-white border rounded-lg shadow-lg z-10 flex flex-col">
-                      <button
-                        onClick={() =>
-                          handleUpdate(comment._id, comment.comment)
-                        }
-                        className="px-4 py-2 text-left hover:bg-green-100 transition text-sm text-gray-700"
-                      >
-                        <CiEdit /> Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(comment._id)}
-                        className="px-4 py-2 text-left hover:bg-red-100 transition text-sm text-red-600"
-                      >
-                        <MdDeleteOutline />
-                        Delete
-                      </button>
+                    <div className="absolute top right-0 mt-6 w-28 bg-white border rounded-lg shadow-lg z-10 flex flex-col">
+                      {user?.newuser?._id == comment?.owner._id ? (
+                        <div>
+                          <button
+                            onClick={() =>
+                              handleUpdate(comment._id, comment.comment)
+                            }
+                            className="px-4 py-2 text-left hover:bg-green-100 transition text-sm text-gray-700"
+                          >
+                            <CiEdit /> Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(comment._id)}
+                            className="px-4 py-2 text-left hover:bg-red-100 transition text-sm text-red-600"
+                          >
+                            <MdDeleteOutline />
+                            Delete
+                          </button>
+                        </div>
+                      ) : (
+                        <button className="px-4 py-2 text-left hover:bg-red-100 transition text-sm text-red-600">
+                          Report
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
