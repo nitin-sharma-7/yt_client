@@ -313,18 +313,18 @@ function MainVideo({ data, fetchVideos }) {
 
                     {model === i && (
                       <div className="absolute top right-0 mt-6 w-28 bg-white border rounded-lg shadow-lg z-10 flex flex-col">
-                        {user?.newuser?._id == comment?.owner._id ? (
+                        {user?.newuser?._id == comment?.owner?._id ? (
                           <div>
                             <button
                               onClick={() =>
-                                handleUpdate(comment._id, comment.comment)
+                                handleUpdate(comment?._id, comment?.comment)
                               }
                               className="px-4 py-2 text-left hover:bg-green-100 transition text-sm text-gray-700"
                             >
                               <CiEdit /> Edit
                             </button>
                             <button
-                              onClick={() => handleDelete(comment._id)}
+                              onClick={() => handleDelete(comment?._id)}
                               className="px-4 py-2 text-left hover:bg-red-100 transition text-sm text-red-600"
                             >
                               <MdDeleteOutline />
